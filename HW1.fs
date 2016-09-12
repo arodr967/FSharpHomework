@@ -31,7 +31,7 @@
 
 // Solution:
 
- // ...
+ //
 
 
 // 2. Write an F# function revlists xs that takes a list of lists xs and reverses all the sub-lists:
