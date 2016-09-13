@@ -43,7 +43,8 @@
 
 // Solution:
 
- // ...
+let revlists = List.map (fun xs -> List.rev xs: int list)
+
 
 // 3. Write an F# function interleave(xs,ys) that interleaves two lists:
 
@@ -54,7 +55,9 @@
 
 // Solution:
 
- // ...
+let rec interleave = function
+  | ([],[]) -> []
+  | (x::xs, y::ys) -> x::y::interleave(xs,ys);;
 
 // 4. Write an F# function cut xs that cuts a list into two equal parts:
 
@@ -76,7 +79,10 @@
 
 // Solution:
 
- // ...
+let rec gencut = function
+  | (0,xs) -> ([],xs)
+  | (n,x::xs) -> let i,j = gencut(n-1,xs)
+                  (x::i,j);;
 
 // 5. Write an F# function shuffle xs that takes an even-length list, cuts it into two equal-sized pieces,
 // and then interleaves the pieces:
