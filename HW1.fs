@@ -110,11 +110,28 @@ let rec interleave = function
 
 // Solution:
 
+(*
+    gencut auxillary function with pattern matching syntax
+    the base case will return a tuple with an empty list and the list you wished to cut
+    the recursive case defined an inner tuple that will apply the gencut function to the 
+    tail of the list and decrement the index by 1. The head of the list is consed with the 
+    first list i (the one that will return all of the elements up to the index), and the
+    remainder of the list is returned as j.
+
+    Note: we do not need to worry about the missing cases because we assume that we will
+    not need to cut the list at all if it is empty.
+
+*)
 let rec gencut = function
   | (0, xs) -> ([], xs)
   | (n, x::xs) -> let (i, j) = gencut(n-1, xs)
                   (x::i, j);;
 
+(*
+    cut function
+    gets the length of the half of the list and passes it into gencut to return the list 
+    split into two halves.
+*)
 let cut xs =
   let half = List.length xs / 2
   gencut(half, xs);;
@@ -151,9 +168,18 @@ let shuffle xs = interleave(cut xs);;
 
 // Solution:
 
-// Deck = a deck shuffled once
+(*
+    countaux auxillary function
+    receives a deck and returns how many shuffles that deck will take for it to match the target deck
+*)
 let rec countaux (deck, target) = if deck = target then 0 else 1 + countaux(shuffle deck, target);;
 
+(*
+    countshuffles function
+    received a number and will get a list from [1..n]. It will then see how many shuffles it takes to get back to the original list.
+    EX: [1;2;3;4] will be shuffled into [1;3;2;4] and then will be shuffled again to return [1;2;3;4], the original list. This took
+    2 shuffles in notal. For a deck of 52 cards, it will take 8 shuffles to return it back to [1..52].
+*)
 let countshuffles n =
     let original = [1..n]
     1 + countaux(shuffle original, original);;
