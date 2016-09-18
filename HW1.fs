@@ -126,4 +126,10 @@ let shuffle xs = interleave(cut xs);;
 
 // Solution:
 
- // ...
+let rec countaux = function
+  | ([], [], count) -> count
+  | (deck, target, count) -> let shuffledDeck = shuffle deck
+                             if shuffledDeck = target then count + 1
+                             else countaux(shuffledDeck, target, count + 1);;
+
+let countshuffles n = countaux([1..n],[1..n],0);;
