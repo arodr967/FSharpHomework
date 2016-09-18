@@ -24,17 +24,31 @@
 // Finally, note that your functions should always return fractions in lowest
 // terms.
 // To implement this, you will need an auxiliary function to calculate
-// the gcd (greatest common divisor)
-// of the numerator and the denominator; this can be done very efficiently using
-// Euclid's algorithm, which can be implemented in F# as follows:
+// the gcd (greatest common divisor) of the numerator and the denominator;
+// this can be done very efficiently using Euclid's algorithm, which can be
+// implemented in F# as follows:
 
- // let rec gcd = function
- // | (a,0) -> a
- // | (a,b) -> gcd (b, a % b)
+let rec gcd = function
+| (a,0) -> a
+| (a,b) -> gcd (b, a % b);;
 
 // Solution:
 
- //
+let (.+) (a,b) (c,d) =
+  let num1 = a * d
+  let den1 = b * d
+  let num2 = c * b
+  let den2 = d * b
+  let numResult = num1 + num2
+  let denResult = den1
+  let gcdResult = gcd (numResult, denResult)
+  (numResult / gcdResult, denResult / gcdResult);;
+
+let (.*) (a,b) (c,d) =
+  let numResult = a * c;
+  let denResult = b * d;
+  let gcdResult = gcd (numResult, denResult)
+  (numResult / gcdResult, denResult / gcdResult);;
 
 
 // 2. Write an F# function revlists xs that takes a list of lists xs and
@@ -46,6 +60,8 @@
 // Hint: This takes just one line of code, using List.map and List.rev.
 
 // Solution:
+
+//Assuming the sub-lists are of type int...
 
 let revlists = List.map (fun xs -> List.rev xs: int list);;
 
