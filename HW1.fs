@@ -35,20 +35,34 @@ let rec gcd = function
 // Solution:
 
 (*
-  Fraction addition function
-  The function multiplies the numerators by the opposite fraction's denominators.This is done because the denominators will also be multiplied
-  by eachother so they can be the same. Once multiplied, the numerators are added together in the first tuple and divided by the gcd.
-  The denominators are multiplied in the second tuple since the fraction needs to have a common denominator. For the gcd, the calculations
-  are repeated so that the gcd can be found for the two fractions. Once the gcd is found, the numerator and denominator are divided by the
-  gcd so that the fraction can be returned in lowest terms. *)
-let (.+) (a,b) (c,d) =  ((a * d + c * b) / gcd(a * d + c * b , b * d)), ((b * d) / gcd(a * d + c * b , b * d))
+  Adding Fractions Function
+  The function multiplies the numerators by the opposite fraction's
+  denominators. This is done because the denominators will also be multiplied
+  by eachother so they can be the same. Once multiplied, the numerators are
+  added together in the first tuple and divided by the gcd. The denominators are
+  multiplied in the second tuple since the fraction needs to have a common
+  denominator. For the gcd, the calculations are repeated so that the gcd can be
+  found for the two fractions. Once the gcd is found, the numerator and
+  denominator are divided by the gcd so that the fraction can be returned in
+  lowest terms. *)
+let (.+) (a,b) (c,d) =
+  (
+    (a * d + c * b) / gcd(a * d + c * b , b * d)),
+    ((b * d) / gcd(a * d + c * b , b * d)
+  );;
 
 (*
-  Fraction multiplication function
-  The numerators are multiplied together and divided by the gcd. The same process is done in the second tuple for the denominator.
-  To find the gcd, the calculations are repeated for the gcd function. The numerator and denominator are each multiplied by the gcd to
-  return the function in lowest terms. *)
-let (.*) (a,b) (c,d) = (a * c / gcd (a * c, b * d), b * d / gcd (a * c, b * d))
+  Multiplying Fractions Function
+  The numerators are multiplied together and divided by the gcd. The same
+  process is done in the second tuple for the denominator. To find the gcd,
+  the calculations are repeated for the gcd function. The numerator and
+  denominator are each multiplied by the gcd to return the function in lowest
+  terms. *)
+let (.*) (a,b) (c,d) =
+  (
+    a * c / gcd (a * c, b * d),
+    b * d / gcd (a * c, b * d)
+  );;
 
 
 // 2. Write an F# function revlists xs that takes a list of lists xs and
@@ -61,8 +75,8 @@ let (.*) (a,b) (c,d) = (a * c / gcd (a * c, b * d), b * d / gcd (a * c, b * d))
 
 // Solution:
 
-(* List.map is called on the List.rev function, which takes a list xs on a parameter.
-List.rev is mapped to every list element of the list list. *)
+(* List.map is called on the List.rev function, which takes a list xs on a
+   parameter. List.rev is mapped to every list element of the list list. *)
 let revlists xs = List.map List.rev xs;;
 
 
@@ -76,10 +90,12 @@ let revlists xs = List.map List.rev xs;;
 // Solution:
 
 (*
-  Assuming the lists are of the same length, the base case returns an empty list if the first list is empty. The recursive case uses the cons
-  operation on ys with the next iteration of the function. This is then consed with xs. It is important to note that not all cases are covered.
-  However, since we can assume both lists are the same length they don't need to be. To avoid the warning you can replace the base case with
-  the following base cases:
+  Assuming the lists are of the same length, the base case returns an empty list
+  if the first list is empty. The recursive case uses the cons operation on ys
+  with the next iteration of the function. This is then consed with xs. It is
+  important to note that not all cases are covered. However, since we can assume
+  both lists are the same length they don't need to be. To avoid the warning you
+  can replace the base case with the following base cases:
   |(x::xs, []) -> [x]
   |([], y::ys) -> [y]
   |([], []) -> []
@@ -152,8 +168,9 @@ let shuffle xs = interleave(cut xs);;
 // Solution:
 
 // Deck = a deck shuffled once
-let rec countaux (deck, target) = if deck = target then 0 else 1 + countaux(shuffle deck, target);;
+let rec countaux (deck, target) =
+  if deck = target then 0 else 1 + countaux(shuffle deck, target);;
 
 let countshuffles n =
-    let original = [1..n]
-    1 + countaux(shuffle original, original);;
+  let original = [1..n]
+  1 + countaux(shuffle original, original);;
