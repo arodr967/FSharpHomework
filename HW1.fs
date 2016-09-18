@@ -1,7 +1,7 @@
 ﻿
 // ---------------------------------------------------------------
 //         Homework 1
-//         Alicia Rodriguez
+//         Adam Levy, Alejandro Palacios, & Alicia Rodriguez
 //         September 19, 2016
 // ---------------------------------------------------------------
 
