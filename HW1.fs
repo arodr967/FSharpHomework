@@ -10,14 +10,18 @@
 // Define infix operators .+ and .* to do addition and multiplication of
 // fractions:
 
- //	> (1,2) .+ (1,3);;
- // val it : int * int = (5, 6)
- // > (1,2) .+ (2,3) .* (3,7);;
- // val it : int * int = (11, 14)
+(*
+  	> (1,2) .+ (1,3);;
+    val it : int * int = (5, 6)
+    > (1,2) .+ (2,3) .* (3,7);;
+    val it : int * int = (11, 14)
+*)
 
 // Note that the F# syntax for defining such an infix operator looks like this:
 
- // let (.+) (a,b) (c,d) = ...
+(*
+    let (.+) (a,b) (c,d) = ...
+*)
 
 // Also note that .+ and .* get the same precedences as + and *, respectively,
 // which is why the second example above gives the result it does.
@@ -64,8 +68,10 @@ let (.*) (a,b) (c,d) =
 // 2. Write an F# function revlists xs that takes a list of lists xs and
 // reverses all the sub-lists:
 
- // > revlists [[0;1;1];[3;2];[];[5]];;
- // val it : int list list = [[1; 1; 0]; [2; 3]; []; [5]]
+(*
+     > revlists [[0;1;1];[3;2];[];[5]];;
+     val it : int list list = [[1; 1; 0]; [2; 3]; []; [5]]
+*)
 
 // Hint: This takes just one line of code, using List.map and List.rev.
 
@@ -78,8 +84,10 @@ let revlists xs = List.map List.rev xs;;
 
 // 3. Write an F# function interleave(xs,ys) that interleaves two lists:
 
- // > interleave ([1;2;3],[4;5;6]);;
- // val it : int list = [1; 4; 2; 5; 3; 6]
+(*
+    > interleave ([1;2;3],[4;5;6]);;
+    val it : int list = [1; 4; 2; 5; 3; 6]
+*)
 
 // Assume that the two lists have the same length.
 
@@ -103,15 +111,19 @@ let rec interleave = function
 
 // 4. Write an F# function cut xs that cuts a list into two equal parts:
 
- // > cut [1;2;3;4;5;6];;
- // val it : int list * int list = ([1; 2; 3], [4; 5; 6])
+(*
+    > cut [1;2;3;4;5;6];;
+    val it : int list * int list = ([1; 2; 3], [4; 5; 6])
+*)
 
 // Assume that the list has even length.
 // To implement cut, first define an auxiliary function gencut(n, xs) that
 // cuts xs into two pieces, where n gives the size of the first piece:
 
- // > gencut(2, [1;3;4;2;7;0;9]);;
- // val it : int list * int list = ([1; 3], [4; 2; 7; 0; 9])
+(*
+    > gencut(2, [1;3;4;2;7;0;9]);;
+    val it : int list * int list = ([1; 3], [4; 2; 7; 0; 9])
+*)
 
 // Paradoxically, although gencut is more general than cut, it is easier to
 // write! (This is an example of Polya's Inventor's Paradox: "The more
@@ -152,8 +164,10 @@ let cut xs =
 // into two equal-sized pieces,
 // and then interleaves the pieces:
 
- // > shuffle [1;2;3;4;5;6;7;8];;
- // val it : int list = [1; 5; 2; 6; 3; 7; 4; 8]
+(*
+    > shuffle [1;2;3;4;5;6;7;8];;
+    val it : int list = [1; 5; 2; 6; 3; 7; 4; 8]
+*)
 
 // (On a deck of cards, this is called a perfect out-shuffle.)
 
@@ -166,8 +180,10 @@ let shuffle xs = interleave(cut xs);;
 // on a deck of n distinct "cards" it takes to put the deck back into its
 // original order:
 
- // > countshuffles 4;;
- // val it : int = 2
+(*
+    > countshuffles 4;;
+    val it : int = 2
+*)
 
 // (To see that this result is correct, note that shuffle [1;2;3;4] = [1;3;2;4],
 // and shuffle [1;3;2;4] = [1;2;3;4].)
@@ -191,7 +207,7 @@ let rec countaux (deck, target) =
   Countshuffles Function
   Received a number and will get a list from [1..n]. It will then see how many
   shuffles it takes to get back to the original list.
-  
+
   Ex: [1;2;3;4] will be shuffled into [1;3;2;4] and then will be shuffled again
   to return [1;2;3;4], the original list. This took 2 shuffles in total. For a
   deck of 52 cards, it will take 8 shuffles to return it back to [1..52].
