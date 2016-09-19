@@ -38,7 +38,7 @@ let rec gcd = function
   Adding Fractions Function
   The function multiplies the numerators by the opposite fraction's
   denominators. This is done because the denominators will also be multiplied
-  by eachother so they can be the same. Once multiplied, the numerators are
+  by each other so they can be the same. Once multiplied, the numerators are
   added together in the first tuple and divided by the gcd. The denominators are
   multiplied in the second tuple since the fraction needs to have a common
   denominator. For the gcd, the calculations are repeated so that the gcd can be
@@ -46,10 +46,8 @@ let rec gcd = function
   denominator are divided by the gcd so that the fraction can be returned in
   lowest terms. *)
 let (.+) (a,b) (c,d) =
-  (
-    (a * d + c * b) / gcd(a * d + c * b , b * d)),
-    ((b * d) / gcd(a * d + c * b , b * d)
-  );;
+  let gcdResult = gcd(a * d + c * b , b * d)
+  (a * d + c * b / gcdResult, b * d / gcdResult);;
 
 (*
   Multiplying Fractions Function
@@ -59,10 +57,8 @@ let (.+) (a,b) (c,d) =
   denominator are each multiplied by the gcd to return the function in lowest
   terms. *)
 let (.*) (a,b) (c,d) =
-  (
-    a * c / gcd (a * c, b * d),
-    b * d / gcd (a * c, b * d)
-  );;
+  let gcdResult = gcd (a * c, b * d)
+  (a * c / gcdResult, b * d / gcdResult);;
 
 
 // 2. Write an F# function revlists xs that takes a list of lists xs and
@@ -126,11 +122,27 @@ let rec interleave = function
 
 // Solution:
 
+(*
+  Gencut Auxillary Function with pattern matching syntax
+  The base case will return a tuple with an empty list and the list you wished
+  to cut. The recursive case defined an inner tuple that will apply the gencut
+  function to the tail of the list and decrement the index by 1. The head of the
+  list is consed with the first list i (the one that will return all of the
+  elements up to the index), and the remainder of the list is returned as j.
+
+  Note: We do not need to worry about the missing cases because we assume that
+  we will not need to cut the list at all if it is empty.
+*)
 let rec gencut = function
   | (0, xs) -> ([], xs)
   | (n, x::xs) -> let (i, j) = gencut(n-1, xs)
                   (x::i, j);;
 
+(*
+  Cut Function
+  Gets the length of the half of the list and passes it into gencut to return
+  the list split into two halves.
+*)
 let cut xs =
   let half = List.length xs / 2
   gencut(half, xs);;
@@ -167,10 +179,23 @@ let shuffle xs = interleave(cut xs);;
 
 // Solution:
 
-// Deck = a deck shuffled once
+(*
+  Countaux Auxillary Function
+  Receives a deck and returns how many shuffles that deck will take for it to
+  match the target deck.
+*)
 let rec countaux (deck, target) =
   if deck = target then 0 else 1 + countaux(shuffle deck, target);;
 
+(*
+  Countshuffles Function
+  Received a number and will get a list from [1..n]. It will then see how many
+  shuffles it takes to get back to the original list.
+  
+  Ex: [1;2;3;4] will be shuffled into [1;3;2;4] and then will be shuffled again
+  to return [1;2;3;4], the original list. This took 2 shuffles in total. For a
+  deck of 52 cards, it will take 8 shuffles to return it back to [1..52].
+*)
 let countshuffles n =
   let original = [1..n]
   1 + countaux(shuffle original, original);;
