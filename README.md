@@ -4,6 +4,8 @@
 
 > Create your own branch `git checkout -b "your-name"` and work your solutions there.
 
+> After each homework, delete your branch `git branch -d "your-name"` and create a new one as before.
+
 
 ## Merge 💃
 
