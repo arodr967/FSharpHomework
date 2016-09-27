@@ -23,7 +23,7 @@
     This function calculatest he cartesian product using the map function. The map function in the non-recursive case will create a list
     of tuples where the head of the first list (from the parameters given) is the first component of the tuple and the second component 
     is each of the elements of the second list. 
-    i.e:  For the first call it would return [(a,1),(a,2)] with the example given.
+    (E.g:  For the first call it would return [(a,1),(a,2)] with the example given).
     The function is then called recursively, removing the head of the first list since we already have all the tuples needed with that
     element. The base case will simply return an empty list once all of the elements from the first list are removed.
 *)
@@ -96,7 +96,31 @@ let rec powerset = function
 // Assume that all the rows in the matrix have the same length.
 
 // Solution:
+(*
+    This function first declares constant len which is the length of the first element of the input list
+    (if the first element length is 0, they all are since they are all the same length)
+    If len is 0, an empty list is returned.
+    Else it will declare a recursive function which will return the first element of an a' list list
+    of arbitrary length as a list. 
+    (E.g. the output of an input list [[1;2];[3;4];[5;6]] would be [1;3;5]).
+    This function is called in the else statement and consed with a recursive call of the transpose
+    function. The input for the recursive call is a List.map which has an anonymous function that
+    returns the tails of all lists in a list of type a' list list (of arbitrary length).
+    (E.g the output of this List.map with input [[1;2;3];[4;5;6]] would be [[2;3];[5;6]]).
+    
+    Put simply, this function conses the first element of each list within the a' list list with
+    the next until there are no more.
 
+*)
+let rec transpose xs = 
+    let len = List.length (List.head xs)
+    if len = 0 then []
+    else
+        let rec getFirst = function
+        |[] -> []
+        |z::zs -> List.head z :: getFirst(zs)      
+        getFirst (xs) :: transpose((List.map (fun ys -> List.tail ys) xs))
+                    
 
 // 4. In this problem and the next, I ask you to analyze code, as discussed in
 // the last section of the Checklist. Suppose we wish to define an F# function
