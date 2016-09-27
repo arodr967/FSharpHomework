@@ -23,7 +23,7 @@
     This function calculatest he cartesian product using the map function. The map function in the non-recursive case will create a list
     of tuples where the head of the first list (from the parameters given) is the first component of the tuple and the second component 
     is each of the elements of the second list. 
-    i.e:  For the first call it would return [(a,1),(a,2)] with the given example.
+    i.e:  For the first call it would return [(a,1),(a,2)] with the example given.
     The function is then called recursively, removing the head of the first list since we already have all the tuples needed with that
     element. The base case will simply return an empty list once all of the elements from the first list are removed.
 *)
