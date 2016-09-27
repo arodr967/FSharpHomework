@@ -29,7 +29,7 @@
 *)
 let rec cartesian = function
 |([], _) -> []
-|(x::xs, ys) -> List.map(fun zs -> (x,zs)) ys @ cartesian(xs, ys)
+|(x::xs, ys) -> List.map (fun zs -> (x,zs)) ys @ cartesian(xs, ys)
 
 
 
@@ -50,6 +50,16 @@ let rec cartesian = function
 // Note that you can order the elements of the powerset however you wish.
 
 // Solution:
+(*
+    The base case simply returns a list of the empty list if the input list is null. 
+    The anonymous function returns a list of lists which takes each of the elements
+    of the input and conses it to the head of the input list. this is then appended to
+    the a' list list which is returned by the recursive call of powerset. The resulting
+    list is then consed with a list containing just the head of the input list.
+*)
+let rec powerset = function
+| [] -> [[]]
+| x::xs ->  [x] :: List.map (fun y -> x :: [y]) xs @ powerset(xs)
 
 
 // 3. The transpose of a matrix M is the matrix obtained by reflecting Mabout
