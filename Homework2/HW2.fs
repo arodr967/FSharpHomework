@@ -97,29 +97,19 @@ let rec powerset = function
 
 // Solution:
 (*
-    This function first declares constant len which is the length of the first element of the input list
-    (if the first element length is 0, they all are since they are all the same length)
-    If len is 0, an empty list is returned.
-    Else it will declare a recursive function which will return the first element of an a' list list
-    of arbitrary length as a list. 
-    (E.g. the output of an input list [[1;2];[3;4];[5;6]] would be [1;3;5]).
-    This function is called in the else statement and consed with a recursive call of the transpose
-    function. The input for the recursive call is a List.map which has an anonymous function that
-    returns the tails of all lists in a list of type a' list list (of arbitrary length).
-    (E.g the output of this List.map with input [[1;2;3];[4;5;6]] would be [[2;3];[5;6]]).
-    
-    Put simply, this function conses the first element of each list within the a' list list with
-    the next until there are no more.
+    This function gets the head of each list within the list list and conses it to the recursive call
+    of the transpose function that will take the tail of each of the lists within the list list.
+    The base case matches the pattern where the first list within the list list is empty
+    (if the first list is empty, they all are).
+    The second handles any other case. It first gets the head of each inner list by mapping list.head
+    onto the input list. That is consed onto the recursive call which gets the tail of each inner list
+    in the main list by calling the map function.
 
 *)
-let rec transpose xs = 
-    let len = List.length (List.head xs)
-    if len = 0 then []
-    else
-        let rec getFirst = function
-        |[] -> []
-        |z::zs -> List.head z :: getFirst(zs)      
-        getFirst (xs) :: transpose((List.map (fun ys -> List.tail ys) xs))
+
+let rec transpose = function
+| [] :: xs -> []
+| xs -> (List.map (List.head) xs) :: transpose(List.map (List.tail) xs)
                     
 
 // 4. In this problem and the next, I ask you to analyze code, as discussed in
@@ -145,6 +135,23 @@ let rec sort = function
 
 // Solution:
 
+(*
+    Step 1: The base cases are correct.
+        If the list is empty, you cannot sort it.
+        If the list contains one value, you cannot sort it.
+    Step 2:
+        Assuming a list of integers [5;3;7;2]
+        Assuming the recursive calls are accurate, for our first iteration we 
+        have 3:: sort (5 :: [7;2])
+    Step 3:
+        The recursive call is on a smaller input because we do take off the
+        first element of the list.
+
+    This algorithm is not correct. Step 2 fails because 3 will be in the
+    beginning of the list, but 2 is clearly less than 3.
+
+*)
+
 
 // 5. Here is an attempt to write mergesortin F#:
 
@@ -169,12 +176,41 @@ let rec mergesort = function
   // Recursion, again addressing all three Steps. (Assume that merge and split
   // both work correctly, as indeed they do.)
 
+  (*
+    Step 1: The first base case is correct.
+                If the list is empty, you cannot sort it.
+                There is the need of an additional base case because you must
+                return x if x is the only element in the list.
+    Step 2: Assuming the recursion is correct, we would get the correct answer
+            because we are splitting the list into two halves as mergesort requires
+    Step 3: The recursion is being done on a smaller list every time because we are 
+            splitting the list into two halves and then calling the function on each
+            half.
+
+    Step 1 fails because it does not cover all of the cases and would result in infinite
+    recursion.
+
+  
+  *)
+
 
   // 2. Enter this program into F# and see what type F# infers for mergesort.
   // Why is this type a clue that something is wrong with mergesort?
 
+  (*
+    The type is: val mergesort : _arg1:'a list -> 'b list when 'b : comparison
+    This indicates something peculiar because the output is a 'b list whereas
+    our original type is a' list
+  *)
+
 
   // 3. Based on your analysis, correct the bug in mergesort.
+
+let rec mergesort2 = function
+| []  -> []
+| [x] -> [x]
+| L   -> let (M, N) = split L
+         merge (mergesort2 M, mergesort2 N);;
 
 
 // 6. Recall that an F# function that takes two arguments can be coded in either
