@@ -19,6 +19,13 @@
 
 // Solution:
 
+// Get the first element of the list xs and add it as the first element
+// of the tuple. Get the first element of the list ys and add it as the
+// second element of the tuple.
+
+let rec cartesian = function
+  | ([x],[y]) -> [(x,y)]
+  | (x::xs, y::ys) -> (x,y) :: cartesian(xs, ys);;
 
 
 // 2. An F# list can be thought of as representing a set, where the order of the
