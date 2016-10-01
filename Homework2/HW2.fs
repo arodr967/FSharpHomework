@@ -200,7 +200,8 @@ let rec mergesort = function
   (*
     The type is: val mergesort : _arg1:'a list -> 'b list when 'b : comparison
     This indicates something peculiar because the output is a 'b list whereas
-    our original type is a' list
+    our original type is a' list. In the fixed solution, both input and output
+    are of type a' list.
   *)
 
 
@@ -236,4 +237,19 @@ let rec mergesort2 = function
     val it : int = 13
 *)
 
+let uncurry f (x,y) = f x y
+let curry f x y = f (x,y)
+
+let plus = uncurry (+)
+let cplus = curry plus
+let plus3 = cplus 3
+              
+
+
 // What are the types of curry and uncurry?
+(*
+    Uncurry has a type: f:('a -> 'b -> 'c) -> x:'a * y:'b -> 'c
+        This means it takes in a function (which is evaluated as curried in the end) and two inputs.
+    Curry has a type: f:('a * 'b -> 'c) -> x:'a -> y:'b -> 'c
+        This means it takes in a function (which is evaluated as uncurried in the end) and two inputs and.
+*)
