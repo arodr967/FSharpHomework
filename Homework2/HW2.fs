@@ -41,8 +41,8 @@ let rec cartesian = function
 
 let rec powerset = function
   | [] -> [[]]
-  | [x] -> [[x]]
-  | x::xs -> [[x]] @ powerset xs;;
+  | [x] -> [x] :: [[]]
+  | x::xs -> List.map (fun a -> x::a) (powerset xs) @ powerset xs;;
 
 
 // 3. The transpose of a matrix M is the matrix obtained by reflecting Mabout
