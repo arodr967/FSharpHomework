@@ -45,7 +45,7 @@ let rec powerset = function
   | x::xs -> List.map (fun a -> x::a) (powerset xs) @ powerset xs;;
 
 
-// 3. The transpose of a matrix M is the matrix obtained by reflecting Mabout
+// 3. The transpose of a matrix M is the matrix obtained by reflecting M about
 // its diagonal. For example, the transpose of
 
 (*
@@ -69,7 +69,7 @@ let rec powerset = function
     [[1;2;3];[4;5;6]]
 *)
 
-// Write an efficient F# function to compute the transpose of an m-by-nmatrix:
+// Write an efficient F# function to compute the transpose of an m-by-n matrix:
 
 (*
     > transpose [[1;2;3];[4;5;6]];;
@@ -79,6 +79,28 @@ let rec powerset = function
 // Assume that all the rows in the matrix have the same length.
 
 // Solution:
+
+// let rec transpose = function
+//  | [[];[]] -> [[]]
+//  | [[x];[y]] -> [[x] @ [y]]
+//  | [x::xs; y::ys] -> [[x] @ [y]] @ transpose [xs;ys];;
+
+let rec transpose = function
+  | [] -> []
+  | [x] -> [x]
+  | x::xs -> [x] @ [List.head xs] @ transpose xs;;
+
+List.map (fun a -> (List.map (fun b -> [a] @ [b]) x)) List.head xs
+
+[List.head x] @ [List.head xs]
+
+List.map (fun a -> a) x
+List.map (fun b -> b) xs
+
+transpose [[1;2;3];[4;5;6]]
+
+x = [1;2;3]
+xs = [4;5;6]
 
 
 // 4. In this problem and the next, I ask you to analyze code, as discussed in
@@ -104,8 +126,45 @@ let rec sort = function
 
 // Solution:
 
+  // Analyzing Code with the Checklist
+  //
+  // 1. Is there any circumstance in which a base case fails to return the correct
+  // result for the input?
+  // > No
 
-// 5. Here is an attempt to write mergesortin F#:
+  // 2. Is there any circumstance in which the code for a non-base case can fail
+  // to transform correct results returned by the recursive calls into the correct
+  // result for the input?
+  // > It is only sorting pairs of elements because it assumes that the list
+  // > it creates is already sorted. This can be seen when going over the code
+  // > by hand:
+
+  (*
+      x1 = 3
+      x2 = 1
+      xs = [4;1;5;9;2;6;5]
+
+      [1]
+
+      x1 = 3
+      x2 = 4
+      xs = [1;5;9;2;6;5]
+
+      [1;3]
+
+      x1 = 4
+      x2 = 1
+      xs = [5;9;2;6;5]
+
+      [1;3;1] not sorting correctly
+  *)
+
+  // 3. Is there any circumstance in which the definition can make a recursive
+  // call on an input that is not smaller than the original input?
+  // > No
+
+
+// 5. Here is an attempt to write mergesort in F#:
 
 let rec merge = function
 | ([], ys)       -> ys
@@ -128,10 +187,30 @@ let rec mergesort = function
   // Recursion, again addressing all three Steps. (Assume that merge and split
   // both work correctly, as indeed they do.)
 
+// 1. Is there any circumstance in which a base case fails to return the correct
+// result for the input?
+// >
+
+// 2. Is there any circumstance in which the code for a non-base case can fail
+// to transform correct results returned by the recursive calls into the correct
+// result for the input?
+// >
+
+// 3. Is there any circumstance in which the definition can make a recursive
+// call on an input that is not smaller than the original input?
+// >
+
 
   // 2. Enter this program into F# and see what type F# infers for mergesort.
   // Why is this type a clue that something is wrong with mergesort?
 
+// Mergesort Type
+(*
+  val mergesort : _arg1:'a list -> 'b list when 'b : comparison
+*)
+
+// > The type says that mergesort takes in an 'a list and returns a 'b list
+// > when 'b is of a comparison type.
 
   // 3. Based on your analysis, correct the bug in mergesort.
 
