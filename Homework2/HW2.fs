@@ -19,14 +19,11 @@
 
 // Solution:
 
-// Get the first element of the list xs and add it as the first element
-// of the tuple. Get the first element of the list ys and add it as the
-// second element of the tuple.
-
 let rec cartesian = function
+  | (_,[]) -> []
+  | ([],_) -> []
   | ([x],[y]) -> [(x,y)]
-  | (x::xs, y::ys) -> (x,y) :: cartesian(xs, ys);;
-
+  | (x::xs, y::ys) -> [(x,y)] @ cartesian(xs, [y]) @ cartesian(x::xs, ys);;
 
 // 2. An F# list can be thought of as representing a set, where the order of the
 // elements in the list is irrelevant. Write an F# function powerset such that
@@ -41,6 +38,11 @@ let rec cartesian = function
 // Note that you can order the elements of the powerset however you wish.
 
 // Solution:
+
+let rec powerset = function
+  | [] -> [[]]
+  | [x] -> [[x]]
+  | x::xs -> [[x]] @ powerset xs;;
 
 
 // 3. The transpose of a matrix M is the matrix obtained by reflecting Mabout
