@@ -80,28 +80,15 @@ let rec powerset = function
 
 // Solution:
 
+let rec transpose2rows = function
+| [[];[]] -> [[]]
+| [[x];[y]] -> [[x] @ [y]]
+| [x::xs; y::ys] -> [[x] @ [y]] @ transpose2rows [xs;ys];;
+
 // let rec transpose = function
-//  | [[];[]] -> [[]]
-//  | [[x];[y]] -> [[x] @ [y]]
-//  | [x::xs; y::ys] -> [[x] @ [y]] @ transpose [xs;ys];;
-
-let rec transpose = function
-  | [] -> []
-  | [x] -> [x]
-  | x::xs -> [x] @ [List.head xs] @ transpose xs;;
-
-List.map (fun a -> (List.map (fun b -> [a] @ [b]) x)) List.head xs
-
-[List.head x] @ [List.head xs]
-
-List.map (fun a -> a) x
-List.map (fun b -> b) xs
-
-transpose [[1;2;3];[4;5;6]]
-
-x = [1;2;3]
-xs = [4;5;6]
-
+// | [] -> []
+// | [x] -> [x]
+// | x::xs -> [List.head [x]] @ [List.head xs];;
 
 // 4. In this problem and the next, I ask you to analyze code, as discussed in
 // the last section of the Checklist. Suppose we wish to define an F# function
