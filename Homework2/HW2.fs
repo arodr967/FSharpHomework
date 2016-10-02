@@ -252,4 +252,18 @@ let rec mergesort = function
     val it : int = 13
 *)
 
-// What are the types of curry and uncurry?
+// Curry function
+let curry a = (fun x -> fun y -> a(x,y));;
+
+// Curry Type
+(*
+  val curry : a:('a * 'b -> 'c) -> x:'a -> y:'b -> 'c
+*)
+
+// Uncurry function
+let uncurry a = (fun (x,y) -> a x y);;
+
+// Uncurry Type
+(*
+  val uncurry : a:('a -> 'b -> 'c) -> x:'a * y:'b -> 'c
+*)
