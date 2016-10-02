@@ -128,13 +128,13 @@ let rec sort = function
 
   // Analyzing Code with the Checklist
   //
-  // 1. Is there any circumstance in which a base case fails to return the correct
-  // result for the input?
+  // 1. Is there any circumstance in which a base case fails to return the
+  // correct result for the input?
   // > No
 
   // 2. Is there any circumstance in which the code for a non-base case can fail
-  // to transform correct results returned by the recursive calls into the correct
-  // result for the input?
+  // to transform correct results returned by the recursive calls into the
+  // correct result for the input?
   // > It is only sorting pairs of elements because it assumes that the list
   // > it creates is already sorted. This can be seen when going over the code
   // > by hand:
@@ -156,7 +156,8 @@ let rec sort = function
       x2 = 1
       xs = [5;9;2;6;5]
 
-      [1;3;1] not sorting correctly
+      [1;3;1]
+      > It is not sorting correctly at this point.
   *)
 
   // 3. Is there any circumstance in which the definition can make a recursive
@@ -189,16 +190,17 @@ let rec mergesort = function
 
 // 1. Is there any circumstance in which a base case fails to return the correct
 // result for the input?
-// >
+// > No.
 
 // 2. Is there any circumstance in which the code for a non-base case can fail
 // to transform correct results returned by the recursive calls into the correct
 // result for the input?
-// >
+// > No.
 
 // 3. Is there any circumstance in which the definition can make a recursive
 // call on an input that is not smaller than the original input?
-// >
+// > Yes, M could be a bigger input than N when it is being split for the case
+// > that L is just a list of size one.
 
 
   // 2. Enter this program into F# and see what type F# infers for mergesort.
@@ -210,9 +212,21 @@ let rec mergesort = function
 *)
 
 // > The type says that mergesort takes in an 'a list and returns a 'b list
-// > when 'b is of a comparison type.
+// > when 'b is of a comparison type. It should be of an 'a list and not a 'b
+// > list.
 
   // 3. Based on your analysis, correct the bug in mergesort.
+
+  let rec mergesort = function
+  | []  -> []
+  | x::[] -> [x]
+  | L   -> let (M, N) = split L
+           merge(mergesort M, mergesort N)
+
+// New Mergesort type
+(*
+  val mergesort : _arg1:'a list -> 'a list when 'a : comparison
+*)
 
 
 // 6. Recall that an F# function that takes two arguments can be coded in either
