@@ -49,6 +49,9 @@ let rec cartesian = function
 
 // Solution:
 
+(*
+  document
+*)
 let rec powerset = function
 | [] -> [[]]
 | [x] -> [x] :: [[]]
@@ -90,15 +93,15 @@ let rec powerset = function
 // Solution:
 
 (*
-    This function gets the head of each list within the list list and conses it
-    to the recursive call of the transpose function that will take the tail of
-    each of the lists within the list list. The base case matches the pattern
-    where the first list within the list list is empty (if the first list is
-    empty, they all are).
-    The second handles any other case. It first gets the head of each inner list
-    by mapping list.head onto the input list. That is consed onto the recursive
-    call which gets the tail of each inner list in the main list by calling the
-    map function.
+  This function gets the head of each list within the list list and conses it
+  to the recursive call of the transpose function that will take the tail of
+  each of the lists within the list list. The base case matches the pattern
+  where the first list within the list list is empty (if the first list is
+  empty, they all are).
+  The second handles any other case. It first gets the head of each inner list
+  by mapping list.head onto the input list. That is consed onto the recursive
+  call which gets the tail of each inner list in the main list by calling the
+  map function.
 *)
 let rec transpose = function
 | [] :: xs -> []
