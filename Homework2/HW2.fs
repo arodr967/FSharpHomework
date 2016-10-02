@@ -20,6 +20,7 @@
 // Solution:
 
 (*
+  Cartesian
   This function calculatest he cartesian product using the map function. The map
   function in the non-recursive case will create a list of tuples where the head
   of the first list (from the parameters given) is the first component of the
@@ -50,7 +51,14 @@ let rec cartesian = function
 // Solution:
 
 (*
-  document
+  Powerset
+  This function first checks if the list is empty and then returns the empty
+  set. Then checks if there's only one element in the list and returns that
+  element plus the empty set.
+  Then in the recursive case, when there's more than one element on the list,
+  it assumes that the powerset of xs returns the correct input; therefore,
+  when mapping through each element of the powerset of xs, it will cons x in
+  the beginnng of each element of xs.
 *)
 let rec powerset = function
 | [] -> [[]]
@@ -93,6 +101,7 @@ let rec powerset = function
 // Solution:
 
 (*
+  Transpose
   This function gets the head of each list within the list list and conses it
   to the recursive call of the transpose function that will take the tail of
   each of the lists within the list list. The base case matches the pattern
@@ -221,11 +230,11 @@ let rec mergesort = function
 
   // 3. Based on your analysis, correct the bug in mergesort.
 
-  let rec mergesort = function
-  | []  -> []
-  | [x] -> [x]
-  | L   -> let (M, N) = split L
-           merge(mergesort M, mergesort N)
+let rec mergesort = function
+| []  -> []
+| [x] -> [x]
+| L   -> let (M, N) = split L
+         merge(mergesort M, mergesort N)
 
 // New Mergesort type
 (*
