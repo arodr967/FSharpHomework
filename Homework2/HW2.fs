@@ -19,11 +19,21 @@
 
 // Solution:
 
+(*
+  This function calculatest he cartesian product using the map function. The map
+  function in the non-recursive case will create a list of tuples where the head
+  of the first list (from the parameters given) is the first component of the
+  tuple and the second component is each of the elements of the second list.
+  (E.g:  For the first call it would return [(a,1),(a,2)] with the example
+  given).
+  The function is then called recursively, removing the head of the first list
+  since we already have all the tuples needed with that element. The base case
+  will simply return an empty list once all of the elements from the first list
+  are removed.
+*)
 let rec cartesian = function
-  | (_,[]) -> []
-  | ([],_) -> []
-  | ([x],[y]) -> [(x,y)]
-  | (x::xs, y::ys) -> [(x,y)] @ cartesian(xs, [y]) @ cartesian(x::xs, ys);;
+|([], _) -> []
+|(x::xs, ys) -> List.map (fun zs -> (x,zs)) ys @ cartesian(xs, ys)
 
 // 2. An F# list can be thought of as representing a set, where the order of the
 // elements in the list is irrelevant. Write an F# function powerset such that
@@ -40,10 +50,9 @@ let rec cartesian = function
 // Solution:
 
 let rec powerset = function
-  | [] -> [[]]
-  | [x] -> [x] :: [[]]
-  | x::xs -> List.map (fun a -> x::a) (powerset xs) @ powerset xs;;
-
+| [] -> [[]]
+| [x] -> [x] :: [[]]
+| x::xs -> List.map (fun a -> x::a) (powerset xs) @ powerset xs;;
 
 // 3. The transpose of a matrix M is the matrix obtained by reflecting M about
 // its diagonal. For example, the transpose of
@@ -80,15 +89,20 @@ let rec powerset = function
 
 // Solution:
 
-let rec transpose2rows = function
-| [[];[]] -> [[]]
-| [[x];[y]] -> [[x] @ [y]]
-| [x::xs; y::ys] -> [[x] @ [y]] @ transpose2rows [xs;ys];;
-
-// let rec transpose = function
-// | [] -> []
-// | [x] -> [x]
-// | x::xs -> [List.head [x]] @ [List.head xs];;
+(*
+    This function gets the head of each list within the list list and conses it
+    to the recursive call of the transpose function that will take the tail of
+    each of the lists within the list list. The base case matches the pattern
+    where the first list within the list list is empty (if the first list is
+    empty, they all are).
+    The second handles any other case. It first gets the head of each inner list
+    by mapping list.head onto the input list. That is consed onto the recursive
+    call which gets the tail of each inner list in the main list by calling the
+    map function.
+*)
+let rec transpose = function
+| [] :: xs -> []
+| xs -> (List.map (List.head) xs) :: transpose(List.map (List.tail) xs);;
 
 // 4. In this problem and the next, I ask you to analyze code, as discussed in
 // the last section of the Checklist. Suppose we wish to define an F# function
@@ -117,14 +131,14 @@ let rec sort = function
   //
   // 1. Is there any circumstance in which a base case fails to return the
   // correct result for the input?
-  // > No
+  // > No.
 
   // 2. Is there any circumstance in which the code for a non-base case can fail
   // to transform correct results returned by the recursive calls into the
   // correct result for the input?
   // > It is only sorting pairs of elements because it assumes that the list
-  // > it creates is already sorted. This can be seen when going over the code
-  // > by hand:
+  // > it creates is already sorted. Therefore, it fails on this step.
+  // > This can be seen when going over the code by hand:
 
   (*
       x1 = 3
@@ -149,7 +163,7 @@ let rec sort = function
 
   // 3. Is there any circumstance in which the definition can make a recursive
   // call on an input that is not smaller than the original input?
-  // > No
+  // > No.
 
 
 // 5. Here is an attempt to write mergesort in F#:
@@ -206,7 +220,7 @@ let rec mergesort = function
 
   let rec mergesort = function
   | []  -> []
-  | x::[] -> [x]
+  | [x] -> [x]
   | L   -> let (M, N) = split L
            merge(mergesort M, mergesort N)
 
@@ -240,17 +254,31 @@ let rec mergesort = function
 *)
 
 // Curry function
-let curry a = (fun x -> fun y -> a(x,y));;
+
+let curry a = (fun x -> fun y -> a(x,y))
+
+// OR
+
+let curry f x y = f (x,y)
 
 // Curry Type
 (*
   val curry : a:('a * 'b -> 'c) -> x:'a -> y:'b -> 'c
+  > This means it takes in a function (which is evaluated as curried in the end)
+  > and two inputs. Both functions return the same type.
 *)
 
 // Uncurry function
-let uncurry a = (fun (x,y) -> a x y);;
+
+let uncurry a = (fun (x,y) -> a x y)
+
+// OR
+
+let uncurry f (x,y) = f x y
 
 // Uncurry Type
 (*
   val uncurry : a:('a -> 'b -> 'c) -> x:'a * y:'b -> 'c
+  > This means it takes in a function (which is evaluated as uncurried in the
+  > end) and two inputs. Both functions return the same type.
 *)
