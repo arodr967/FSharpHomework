@@ -32,8 +32,8 @@
   are removed.
 *)
 let rec cartesian = function
-|([], _) -> []
-|(x::xs, ys) -> List.map (fun zs -> (x,zs)) ys @ cartesian(xs, ys)
+| ([], _) -> []
+| (x::xs, ys) -> List.map (fun zs -> (x,zs)) ys @ cartesian(xs, ys)
 
 // 2. An F# list can be thought of as representing a set, where the order of the
 // elements in the list is irrelevant. Write an F# function powerset such that
@@ -52,7 +52,7 @@ let rec cartesian = function
 let rec powerset = function
 | [] -> [[]]
 | [x] -> [x] :: [[]]
-| x::xs -> List.map (fun a -> x::a) (powerset xs) @ powerset xs;;
+| x::xs -> List.map (fun a -> x::a) (powerset xs) @ powerset xs
 
 // 3. The transpose of a matrix M is the matrix obtained by reflecting M about
 // its diagonal. For example, the transpose of
@@ -102,7 +102,7 @@ let rec powerset = function
 *)
 let rec transpose = function
 | [] :: xs -> []
-| xs -> (List.map (List.head) xs) :: transpose(List.map (List.tail) xs);;
+| xs -> (List.map (List.head) xs) :: transpose(List.map (List.tail) xs)
 
 // 4. In this problem and the next, I ask you to analyze code, as discussed in
 // the last section of the Checklist. Suppose we wish to define an F# function
@@ -120,7 +120,7 @@ let rec sort = function
 | []         -> []
 | [x]        -> [x]
 | x1::x2::xs -> if x1 <= x2 then x1 :: sort (x2::xs)
-                            else x2 :: sort (x1::xs);;
+                            else x2 :: sort (x1::xs)
 
 // Analyze the correctness of this definition with respect to the Checklist for
 // Programming with Recursion, being sure to address all three Steps.
@@ -172,18 +172,18 @@ let rec merge = function
 | ([], ys)       -> ys
 | (xs, [])       -> xs
 | (x::xs, y::ys) -> if x < y then x :: merge (xs, y::ys)
-                             else y :: merge (x::xs, ys);;
+                             else y :: merge (x::xs, ys)
 
 let rec split = function
 | []       -> ([], [])
 | [a]      -> ([a], [])
 | a::b::cs -> let (M,N) = split cs
-              (a::M, b::N);;
+              (a::M, b::N)
 
 let rec mergesort = function
 | []  -> []
 | L   -> let (M, N) = split L
-         merge (mergesort M, mergesort N);;
+         merge (mergesort M, mergesort N)
 
   // 1. Analyze mergesort with respect to the Checklist for Programming with
   // Recursion, again addressing all three Steps. (Assume that merge and split
