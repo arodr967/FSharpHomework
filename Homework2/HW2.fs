@@ -21,7 +21,7 @@
 
 (*
   Cartesian
-  This function calculatest he cartesian product using the map function. The map
+  This function calculates the cartesian product using the map function. The map
   function in the non-recursive case will create a list of tuples where the head
   of the first list (from the parameters given) is the first component of the
   tuple and the second component is each of the elements of the second list.
@@ -58,7 +58,7 @@ let rec cartesian = function
   Then in the recursive case, when there's more than one element on the list,
   it assumes that the powerset of xs returns the correct input; therefore,
   when mapping through each element of the powerset of xs, it will cons x in
-  the beginnng of each element of xs.
+  the beginning of each element of xs.
 *)
 let rec powerset = function
 | [] -> [[]]
