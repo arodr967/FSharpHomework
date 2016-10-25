@@ -18,6 +18,7 @@
 
 // Solution
 
+//Documentation here
 let rec inner xs ys = if xs = [] then 0 else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
 
 
