@@ -18,7 +18,11 @@
 
 // Solution:
 
-
+let rec inner u v =
+  match (u, v) with
+  | ([], []) -> 0
+  | ([u], [v]) -> u * v
+  | (u::us, v::vs) -> (u * v) + inner us vs
 
 // 2. Given an m-by-n matrix A and an n-by-p matrix B, the product of A and B
 // is an m-by-p matrix whose entry in position (i,j) is the inner product of
