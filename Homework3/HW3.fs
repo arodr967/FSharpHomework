@@ -41,6 +41,21 @@ let rec inner xs ys = if xs = [] then 0 else List.head xs * List.head ys + inner
 
 // Solution:
 
+let rec transpose = function
+| [] -> failwith "cannot transpose a 0-by-n matrix"
+| []::xs -> [] // base case: m-by-0
+| xs -> List.map List.head xs :: transpose (List.map List.tail xs)
+
+//Curried version because I accidentally made it
+let rec multiply2 xs ys = if List.length xs = 0 then [] 
+                          else let zs = transpose ys
+                               List.map (inner (List.head xs)) zs :: multiply2 (List.tail xs) (ys);;
+
+let rec multiply = function
+| ([], ys) -> []
+| (x::xs, ys) -> let zs = transpose ys
+                 List.map (inner x) zs :: multiply (xs) (ys)                                            
+
 
 
 // 3. Two powerful List functions provided by F# are List.fold and
