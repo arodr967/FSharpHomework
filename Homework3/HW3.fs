@@ -54,7 +54,7 @@ let rec multiply2 xs ys = if List.length xs = 0 then []
 let rec multiply = function
 | ([], ys) -> []
 | (x::xs, ys) -> let zs = transpose ys
-                 List.map (inner x) zs :: multiply (xs) (ys)                                            
+                 List.map (inner x) zs :: multiply (xs,ys)                                            
 
 
 
