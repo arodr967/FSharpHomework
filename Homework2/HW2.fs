@@ -113,6 +113,7 @@ let rec powerset = function
   map function.
 *)
 let rec transpose = function
+| [] -> failwith "cannot transpose a 0-by-n matrix"
 | [] :: xs -> []
 | xs -> (List.map (List.head) xs) :: transpose(List.map (List.tail) xs)
 
