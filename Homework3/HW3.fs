@@ -40,8 +40,17 @@ let rec inner u v =
 // Assume that the dimensions of the matrices are appropriate.
 // Hint: Use transpose (from Homework 2), inner, and List.map.
 
+let rec transpose = function
+| [] -> failwith "cannot transpose a 0-by-n matrix"
+| [] :: xs -> []
+| xs -> (List.map (List.head) xs) :: transpose(List.map (List.tail) xs)
+
 // Solution:
 
+let rec multiply = function
+| ([], []) -> failwith "suckit"
+| ([] :: A, [] :: B) -> []
+| (A, B) -> inner (List.head A) (List.head (transpose B)) :: multiply(List.tail A, List.tail (transpose B))
 
 
 // 3. Two powerful List functions provided by F# are List.fold and
