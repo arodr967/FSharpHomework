@@ -20,7 +20,7 @@
 
 let rec inner u v =
   match (u, v) with
-  | ([], []) -> 0
+  | ([], []) -> failwith "empty lists have no product"
   | ([u], [v]) -> u * v
   | (u::us, v::vs) -> (u * v) + inner us vs
 
@@ -48,10 +48,14 @@ let rec transpose = function
 // Solution:
 
 let rec multiply = function
-| ([], []) -> failwith "suckit"
-| ([] :: A, [] :: B) -> []
-| (A, B) -> inner (List.head A) (List.head (transpose B)) :: multiply(List.tail A, List.tail (transpose B))
-
+| ([], []) -> failwith "cannot multiply empty matrices"
+| ([] :: A, [] :: B) -> [[]]
+| (A, B) -> [inner (List.head A) (List.head (transpose B))] :: multiply(List.tail A, transpose (List.tail B))
+//BRAINFUCK
+// inner (List.head A) (List.head (transpose B))
+// inner (List.head A) (List.tail (transpose B))
+// inner (List.tail A) (List.head (transpose B))
+// inner (List.tail A) (List.tail (transpose B))
 
 // 3. Two powerful List functions provided by F# are List.fold and
 // List.foldBack. These are similar to List.reduce and List.reduceBack, but
