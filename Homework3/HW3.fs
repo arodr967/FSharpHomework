@@ -64,20 +64,21 @@ let rec multiply = function
     (f x1 (f x2 (f x3 ... (f xn i) ... )))
 *)
 // In spite of this complicated behavior, they can be implemented very simply:
+
+let rec fold f a = function
+  | []    -> a
+  | x::xs -> fold f (f a x) xs
 (*
-    > let rec fold f a = function
-      | []    -> a
-      | x::xs -> fold f (f a x) xs;;
-
     val fold : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
-
-    > let rec foldBack f xs a =
-        match xs with
-        | []    -> a
-        | y::ys -> f y (foldBack f ys a);;
-
+*)
+let rec foldBack f xs a =
+  match xs with
+  | []    -> a
+  | y::ys -> f y (foldBack f ys a)
+(*
     val foldBack : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
 *)
+
 // (Note that they don't take their arguments in the same order.)
 // Each of these functions can be used to implement flatten, which "flattens"
 // a list of lists:
@@ -92,11 +93,26 @@ let rec multiply = function
     val it : int list = [1; 2; 3; 4; 5; 6]
 *)
 // Compare the efficiency of flatten1 xs and flatten2 xs, both in terms of
-// asymptotic time compexity and experimentally. To make the analysis
+// asymptotic time complexity and experimentally. To make the analysis
 // simpler, assume that xs is a list of the form [[1];[2];[3];...;[n]].
 
 // Solution:
 
+// flatten1 takes 00.010 seconds to compute.
+(*
+> flatten1 [[1;2];[];[3];[4;5;6]];;
+Real: 00:00:00.010, CPU: 00:00:00.006, GC gen0: 0, gen1: 0
+val it : int list = [1; 2; 3; 4; 5; 6]
+*)
+// The asymptotic time complexity is...
+
+// flatten2 takes 00.001 seconds to compute.
+(*
+flatten2 [[1;2];[];[3];[4;5;6]];;
+Real: 00:00:00.001, CPU: 00:00:00.001, GC gen0: 0, gen1: 0
+val it : int list = [1; 2; 3; 4; 5; 6]
+*)
+// The asymptotic time complexity is...
 
 
 // 4. An interesting higher-order function is twice, which can be defined by
