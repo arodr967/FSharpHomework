@@ -169,6 +169,8 @@ val it : int list = [1; 2; 3; 4; 5; 6]
 
 // Solution:
 
+// curried...
+
 
 
 // 6. Interpreter 0 In this problem, we begin our exploration of the use of F#
