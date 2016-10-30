@@ -139,7 +139,7 @@ val it : int list = [1; 2; 3; 4; 5; 6]
     val it : int = 16
 *)
 // It is pretty easy to see that with k occurrences of twice, these
-// expressions will return 2k.
+// expressions will return 2^k.
 // Remarkably, F# also allows us to evaluate expressions like
 (*
     twice twice twice twice successor 0
@@ -155,6 +155,9 @@ val it : int list = [1; 2; 3; 4; 5; 6]
 
 // Solution:
 
+// 2^k + n
+// k = k occurrences of twice
+// n = successor of n
 
 
 // 5. Recall our discussion of infinite streams in F#, with definition
