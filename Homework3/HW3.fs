@@ -100,17 +100,17 @@ let rec foldBack f xs a =
 
 // flatten1 takes 00.010 seconds to compute.
 (*
-> flatten1 [[1;2];[];[3];[4;5;6]];;
-Real: 00:00:00.010, CPU: 00:00:00.006, GC gen0: 0, gen1: 0
-val it : int list = [1; 2; 3; 4; 5; 6]
+    > flatten1 [[1;2];[];[3];[4;5;6]];;
+    Real: 00:00:00.010, CPU: 00:00:00.006, GC gen0: 0, gen1: 0
+    val it : int list = [1; 2; 3; 4; 5; 6]
 *)
 // The asymptotic time complexity is...
 
 // flatten2 takes 00.001 seconds to compute.
 (*
-flatten2 [[1;2];[];[3];[4;5;6]];;
-Real: 00:00:00.001, CPU: 00:00:00.001, GC gen0: 0, gen1: 0
-val it : int list = [1; 2; 3; 4; 5; 6]
+    > flatten2 [[1;2];[];[3];[4;5;6]];;
+    Real: 00:00:00.001, CPU: 00:00:00.001, GC gen0: 0, gen1: 0
+    val it : int list = [1; 2; 3; 4; 5; 6]
 *)
 // The asymptotic time complexity is...
 
@@ -155,10 +155,30 @@ val it : int list = [1; 2; 3; 4; 5; 6]
 
 // Solution:
 
-// 2^k + n
-// k = k occurrences of twice
-// n = successor of n
+twice succesor 0  == successor (successor 0)
 
+twice twice successor 0 == twice (twice successor) 0
+                        == (twice successor) (twice successor 0)
+
+twice twice twice successor 0 == twice (twice (twice (twice successor))) 0
+twice (twice twice) successor 0
+
+twice (twice twice) successor 0
+twice twice (twice twice successor) 0
+twice twice (twice twice successor) 0
+(twice (twice (twice twice successor ))) 0
+
+twice twice twice twice twice successor 0 == twice (twice (twice (twice successor))) 0
+twice (twice twice) twice successor 0
+twice (twice twice) (twice twice) (twice successor) 0
+twice (twice twice) twice successor 0
+twice (twice twice) twice successor 0
+
+2 ->  4 ->  16 ->   65536 ->  dfrsdf
+m=1,  m=2,  m=3,    m=4,      m=5
+k=1,  k=2,  k=4,    k=16,     k=256
+
+2^(k-1) * 2^(k-1) ????
 
 // 5. Recall our discussion of infinite streams in F#, with definition
 (*
