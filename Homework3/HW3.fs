@@ -50,7 +50,7 @@ let rec transpose = function
 let rec multiply2 xs ys = if List.length xs = 0 then [] 
                           else let zs = transpose ys
                                List.map (inner (List.head xs)) zs :: multiply2 (List.tail xs) (ys);;
-
+//Uncurried and correct version
 let rec multiply = function
 | ([], ys) -> []
 | (x::xs, ys) -> let zs = transpose ys
@@ -155,6 +155,14 @@ let rec multiply = function
 // by applying function f to each element of stream s.
 
 // Solution:
+
+ type 'a stream = Cons of 'a * (unit -> 'a stream)
+
+ //Use as test
+ let rec upfrom n = Cons(n, fun () -> upfrom(n+1))
+
+ //Actual answer
+ let rec mapstream f (Cons(n, s)) = Cons(f n, fun () -> mapstream f (s()) )
 
 
 
