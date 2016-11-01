@@ -22,7 +22,7 @@
     If the first list is empty, 0 is returned. The recursive call multiplies the 
     heads of both lists together and then calls the function on the tails of the lists.
 *)
-let rec inner xs ys = if xs = [] then 0 else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
+let rec inner xs ys = if xs = [] || ys = [] then 0 else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
 
 
 
