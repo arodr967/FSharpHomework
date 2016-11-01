@@ -18,7 +18,10 @@
 
 // Solution
 
-//Documentation here
+(*
+    If the first list is empty, 0 is returned. The recursive call multiplies the 
+    heads of both lists together and then calls the function on the tails of the lists.
+*)
 let rec inner xs ys = if xs = [] then 0 else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
 
 
@@ -43,14 +46,22 @@ let rec inner xs ys = if xs = [] then 0 else List.head xs * List.head ys + inner
 
 let rec transpose = function
 | [] -> failwith "cannot transpose a 0-by-n matrix"
-| []::xs -> [] // base case: m-by-0
+| []::xs -> [] 
 | xs -> List.map List.head xs :: transpose (List.map List.tail xs)
 
-//Curried version because I accidentally made it
-let rec multiply2 xs ys = if List.length xs = 0 then [] 
-                          else let zs = transpose ys
-                               List.map (inner (List.head xs)) zs :: multiply2 (List.tail xs) (ys);;
-//Uncurried and correct version
+(*
+    The base case returns the empty list when multiplying by an empty matrix.
+
+    The recursive case will first transpose the second list so that it has the same 
+    number of rows as the first matrix. 
+
+    It then takes the first row of the first list and does the inner operation on
+    the rows of zs (columns of ys) which will. This will calculate the first row
+    of the resulting matrix. 
+
+    It is then consed onto the recursive call of the second function which is done
+    on the next row of the first matrix.
+*)
 let rec multiply = function
 | ([], ys) -> []
 | (x::xs, ys) -> let zs = transpose ys
@@ -105,10 +116,83 @@ let rec multiply = function
 
 //Test inputs
 let listOfLists xs = List.map (fun n -> n :: [] ) xs;; 
+let ys = listOfLists [1..50000];;
 
 //Given functions
-let flatten1 xs = List.fold (@) [] xs
-let flatten2 xs = List.foldBack (@) xs []
+let flatten1 xs = List.fold (@) [] xs;;
+let flatten2 xs = List.foldBack (@) xs [];;
+
+//Analysis of flatten 1:
+
+    //Asymptotic time complexity analysis:
+      (*
+         let rec fold f a = function
+         | []    -> a
+         | x::xs -> fold f (f a x) xs;;
+
+
+        To begin, the length of a will be N and the length of the list passed in (we will call it ys) is of length M
+
+        1.) Amount of recurisive invocations.
+
+            The amount of recurisve invocations will be M because each call will be done on the tail of ys
+            (O(M) time complexity).
+
+        2.) Cost of each invocation directly
+            
+            The cost of each invocation directly will be O(N) because the append of A with the head of ys will be
+            done before the function is called again.
+
+        O(M) invocations * O(N) cost = O(M * N) total time complexity.
+        This is not good because although the length of M is reduced every time, the length of N increases. 
+        The experimental analysis shows just how slow this operation can get.
+            
+        
+      *)
+
+    //Experimental analysis:
+     (*
+        flatten1 (listOfLists[1..50000]);;
+        Real: 00:00:14.862, CPU: 00:00:14.859, GC gen0: 3499, gen1: 3499, gen2: 0
+     *)
+//Analysis of flatten 2:
+
+     //Asymptotic time complexity analysis:
+      (*
+            let rec foldBack f xs a =
+            match xs with
+            | []    -> a
+            | y::ys -> f y (foldBack f ys a);;
+
+
+          1.) Amount of recurisive invocations.
+                
+              The amount of recursive invocations is M where M is the length of ys
+              (O(M) time complexity).
+
+         2.) Cost of each invocation directly
+            
+             The cost of each invocation directly is O(M) because the head of the list ys
+             is appended to the result of the recurive call.
+             Even though it is always the head of the list which is just 1 element,
+             that is still some length m - n which is generalized into O(M).
+
+
+        O(M) invocations * O(M) calls = O(M^2) time complexity
+        This is far better than flatten 1 because the parameters passed into append are not 
+        getting bigger after each call. 
+
+        
+      *)
+
+    //Experimental analysis:
+     (*
+         flatten2 (listOfLists[1..50000]);;
+         Real: 00:00:00.007, CPU: 00:00:00.015, GC gen0: 1, gen1: 1, gen2: 1
+     *)
+
+
+
 
 
 // 4. An interesting higher-order function is twice, which can be defined by
@@ -151,6 +235,37 @@ let flatten2 xs = List.foldBack (@) xs []
 
 // Solution:
 
+    (*
+        To begin, the function was runned when k = 1,2,3,4
+        this gave the values 2,4,16,65536 respectively.
+
+        I found that aside from when k = 1, the resulting
+        numbers could be square rooted to give integers.
+
+        I created a temporary pattern that would get me
+        closer to the answer:
+        (2^1), (2^2), (4^2), (256^2)
+
+        To further expound upon this temporary pattern,
+        I found the roots of the cases where the would
+        result in integers:
+        (2^1), (2^2), ((2 ^ 2) ^ 2), ((((2^2)^2)^2) ^ 2)
+
+        It became clear that the variable amount of times 
+        you must raise 2 to the power of 2 is k - 1 times. The 
+        final power of 2 stays the same.
+
+        The pattern should resolve to (2 ^ (2^k-1)) ^ 2.
+
+        This resolved the initial issue of k = 1 because
+        it would result in sqrt(2) ^ 2 which would simply
+        be 2.
+
+
+        
+    
+    *)
+
 
 
 // 5. Recall our discussion of infinite streams in F#, with definition
@@ -162,13 +277,19 @@ let flatten2 xs = List.foldBack (@) xs []
 
 // Solution:
 
- type 'a stream = Cons of 'a * (unit -> 'a stream)
+ type 'a stream = Cons of 'a * (unit -> 'a stream);;
 
- //Use as test
- let rec upfrom n = Cons(n, fun () -> upfrom(n+1))
+ //Used as test
+ let rec upfrom n = Cons(n, fun () -> upfrom(n+1));;
 
- //Actual answer
- let rec mapstream f (Cons(n, s)) = Cons(f n, fun () -> mapstream f (s()) )
+ (*
+    This function takes as input some function f and a type of cons.
+    It will give a type cons where the type n is applied to the function.
+    The function type in cons will return a function which will apply some
+    function f to the result of the function passed in from the type cons.
+ 
+ *)
+ let rec mapstream f (Cons(n, s)) = Cons(f n, fun () -> mapstream f (s()) );;
 
 
 
@@ -210,7 +331,7 @@ let flatten2 xs = List.foldBack (@) xs []
 
 (*some picture here*)
 
-// Your job is to write an F# function evaluatethat takes an abstract syntax
+// Your job is to write an F# function evaluate that takes an abstract syntax
 // tree and returns the result of evaluating it. Most of the time, evaluating
 // a tree will produce an integer, but we must address the possibility of
 // dividing by zero. This could be handled by raising an exception, but
@@ -234,7 +355,70 @@ let flatten2 xs = List.foldBack (@) xs []
 
 // Solution:
 
+     type Exp =
+      Num of int
+    | Neg of Exp
+    | Sum of Exp * Exp
+    | Diff of Exp * Exp
+    | Prod of Exp * Exp
+    | Quot of Exp * Exp
+
+
+
+  (*
+    This function recursively evaluates some sequence of calls of type Exp
+    and returns a type int option.
+
+    If the Exp is Neg, the negation must be returned.
+
+    The other types (except for Quot) can all be done in a similar fashion, so the pattern
+    matched for Sum will be used.
+    
+    Consider the following value Sum(e,s) where e and s are type Exp
+
+    First, e is resolved locally to an integer value by pattern matching.
+
+    Then, pattern matching is used on s. If the type is None, None is returned.
+    Otherwise an int option will be returned with the appropriate operation done.
+
+    For Quot, it is somewhat similar except you cannot divide by 0.
+    if the int option contains 0 or is None, None is returned. Otherwise the appropriate
+    operation is done.
+
+    Note that in the local declaration, None is matched with 0. This is to prevent
+    an error from an erroneous input such as:
+    evaluate (Sum(Quot(Num 2,Num 0),Num 2));;
+    It can be modified to result in an error.
+ 
+  *)
   let rec evaluate = function
   | Num n -> Some n
   | Neg e -> match evaluate e with
-	     | ...
+             | None -> None
+             | Some n -> Some (n * -1)
+  | Sum (e,s) ->  let e = match evaluate e with
+                          | Some e -> e
+                          | None -> 0
+                  match evaluate s with
+                  | None -> None
+                  | Some n -> Some (e + n)
+  | Diff (e,s) -> let e = match evaluate e with
+                          | Some e -> e
+                          | None -> 0
+                  match evaluate s with
+                  | None -> None 
+                  | Some n -> Some (e - n)
+  | Prod (e,s) -> let e = match evaluate e with
+                          | Some e -> e
+                          | None -> 0
+                  match evaluate s with
+                  | None -> None
+                  | Some n -> Some (e * n)
+  | Quot (e,s) -> let e = match evaluate e with
+                          | Some e -> e
+                          | None -> 0
+                  match evaluate s with
+                  | None   -> None
+                  | Some 0 -> None
+                  | Some n -> Some (e / n) 
+ 
