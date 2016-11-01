@@ -103,6 +103,12 @@ let rec multiply = function
 
 // Solution:
 
+//Test inputs
+let listOfLists xs = List.map (fun n -> n :: [] ) xs;; 
+
+//Given functions
+let flatten1 xs = List.fold (@) [] xs
+let flatten2 xs = List.foldBack (@) xs []
 
 
 // 4. An interesting higher-order function is twice, which can be defined by
