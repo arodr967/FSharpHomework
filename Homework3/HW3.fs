@@ -22,7 +22,16 @@
     If the first list is empty, 0 is returned. The recursive call multiplies the 
     heads of both lists together and then calls the function on the tails of the lists.
 *)
-let rec inner xs ys = if xs = [] || ys = [] then 0 else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
+//No pattern matching
+let rec inner xs ys = if xs = [] || ys = [] then 0 
+                      else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
+
+//With pattern matching
+let rec inner2 u v =
+  match (u, v) with
+  | ([], []) -> failwith "empty lists have no product"
+  | ([u], [v]) -> u * v
+  | (u::us, v::vs) -> (u * v) + inner2 us vs
 
 
 
