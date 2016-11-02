@@ -65,7 +65,7 @@ let rec transpose = function
     number of rows as the first matrix. 
 
     It then takes the first row of the first list and does the inner operation on
-    the rows of zs (columns of ys) which will. This will calculate the first row
+    the rows of zs (columns of ys) This will calculate the first row
     of the resulting matrix. 
 
     It is then consed onto the recursive call of the second function which is done
