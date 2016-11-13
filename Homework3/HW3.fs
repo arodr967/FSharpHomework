@@ -1,7 +1,11 @@
 // ---------------------------------------------------------------
 //         Homework 3
 //         Adam Levy, Alejandro Palacios, & Alicia Rodriguez
+<<<<<<< HEAD
 //         October 31, 2016
+=======
+//         November 2, 2016
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
 // ---------------------------------------------------------------
 
 
@@ -19,6 +23,7 @@
 // Solution
 
 (*
+<<<<<<< HEAD
     If the first list is empty, 0 is returned. The recursive call multiplies the 
     heads of both lists together and then calls the function on the tails of the lists.
 *)
@@ -27,6 +32,16 @@ let rec inner xs ys = if xs = [] || ys = [] then 0
                       else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
 
 //With pattern matching
+=======
+    If the first list is empty, 0 is returned. The recursive call multiplies the
+    heads of both lists together and then calls the function on the tails of the lists.
+*)
+// Without pattern matching
+let rec inner xs ys = if xs = [] || ys = [] then 0
+                      else List.head xs * List.head ys + inner (List.tail xs) (List.tail ys);;
+
+// With pattern matching
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
 let rec inner2 u v =
   match (u, v) with
   | ([], []) -> failwith "empty lists have no product"
@@ -55,18 +70,31 @@ let rec inner2 u v =
 
 let rec transpose = function
 | [] -> failwith "cannot transpose a 0-by-n matrix"
+<<<<<<< HEAD
 | []::xs -> [] 
+=======
+| []::xs -> []
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
 | xs -> List.map List.head xs :: transpose (List.map List.tail xs)
 
 (*
     The base case returns the empty list when multiplying by an empty matrix.
 
+<<<<<<< HEAD
     The recursive case will first transpose the second list so that it has the same 
     number of rows as the first matrix. 
 
     It then takes the first row of the first list and does the inner operation on
     the rows of zs (columns of ys) This will calculate the first row
     of the resulting matrix. 
+=======
+    The recursive case will first transpose the second list so that it has the same
+    number of rows as the first matrix.
+
+    It then takes the first row of the first list and does the inner operation on
+    the rows of zs (columns of ys) which will. This will calculate the first row
+    of the resulting matrix.
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
 
     It is then consed onto the recursive call of the second function which is done
     on the next row of the first matrix.
@@ -74,7 +102,11 @@ let rec transpose = function
 let rec multiply = function
 | ([], ys) -> []
 | (x::xs, ys) -> let zs = transpose ys
+<<<<<<< HEAD
                  List.map (inner x) zs :: multiply (xs,ys)                                            
+=======
+                 List.map (inner x) zs :: multiply (xs,ys)
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
 
 
 
@@ -124,7 +156,11 @@ let rec multiply = function
 // Solution:
 
 //Test inputs
+<<<<<<< HEAD
 let listOfLists xs = List.map (fun n -> n :: [] ) xs;; 
+=======
+let listOfLists xs = List.map (fun n -> n :: [] ) xs;;
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
 let ys = listOfLists [1..50000];;
 
 //Given functions
@@ -148,15 +184,26 @@ let flatten2 xs = List.foldBack (@) xs [];;
             (O(M) time complexity).
 
         2.) Cost of each invocation directly
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
             The cost of each invocation directly will be O(N) because the append of A with the head of ys will be
             done before the function is called again.
 
         O(M) invocations * O(N) cost = O(M * N) total time complexity.
+<<<<<<< HEAD
         This is not good because although the length of M is reduced every time, the length of N increases. 
         The experimental analysis shows just how slow this operation can get.
             
         
+=======
+        This is not good because although the length of M is reduced every time, the length of N increases.
+        The experimental analysis shows just how slow this operation can get.
+
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
       *)
 
     //Experimental analysis:
@@ -175,12 +222,20 @@ let flatten2 xs = List.foldBack (@) xs [];;
 
 
           1.) Amount of recurisive invocations.
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
               The amount of recursive invocations is M where M is the length of ys
               (O(M) time complexity).
 
          2.) Cost of each invocation directly
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
              The cost of each invocation directly is O(M) because the head of the list ys
              is appended to the result of the recurive call.
              Even though it is always the head of the list which is just 1 element,
@@ -188,10 +243,17 @@ let flatten2 xs = List.foldBack (@) xs [];;
 
 
         O(M) invocations * O(M) calls = O(M^2) time complexity
+<<<<<<< HEAD
         This is far better than flatten 1 because the parameters passed into append are not 
         getting bigger after each call. 
 
         
+=======
+        This is far better than flatten 1 because the parameters passed into append are not
+        getting bigger after each call.
+
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
       *)
 
     //Experimental analysis:
@@ -260,8 +322,13 @@ let flatten2 xs = List.foldBack (@) xs [];;
         result in integers:
         (2^1), (2^2), ((2 ^ 2) ^ 2), ((((2^2)^2)^2) ^ 2)
 
+<<<<<<< HEAD
         It became clear that the variable amount of times 
         you must raise 2 to the power of 2 is k - 1 times. The 
+=======
+        It became clear that the variable amount of times
+        you must raise 2 to the power of 2 is k - 1 times. The
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
         final power of 2 stays the same.
 
         The pattern should resolve to (2 ^ (2^k-1)) ^ 2.
@@ -271,8 +338,13 @@ let flatten2 xs = List.foldBack (@) xs [];;
         be 2.
 
 
+<<<<<<< HEAD
         
     
+=======
+
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
     *)
 
 
@@ -296,7 +368,11 @@ let flatten2 xs = List.foldBack (@) xs [];;
     It will give a type cons where the type n is applied to the function.
     The function type in cons will return a function which will apply some
     function f to the result of the function passed in from the type cons.
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
  *)
  let rec mapstream f (Cons(n, s)) = Cons(f n, fun () -> mapstream f (s()) );;
 
@@ -382,7 +458,11 @@ let flatten2 xs = List.foldBack (@) xs [];;
 
     The other types (except for Quot) can all be done in a similar fashion, so the pattern
     matched for Sum will be used.
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
     Consider the following value Sum(e,s) where e and s are type Exp
 
     First, e is resolved locally to an integer value by pattern matching.
@@ -398,7 +478,11 @@ let flatten2 xs = List.foldBack (@) xs [];;
     an error from an erroneous input such as:
     evaluate (Sum(Quot(Num 2,Num 0),Num 2));;
     It can be modified to result in an error.
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
   *)
   let rec evaluate = function
   | Num n -> Some n
@@ -415,7 +499,11 @@ let flatten2 xs = List.foldBack (@) xs [];;
                           | Some e -> e
                           | None -> 0
                   match evaluate s with
+<<<<<<< HEAD
                   | None -> None 
+=======
+                  | None -> None
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
                   | Some n -> Some (e - n)
   | Prod (e,s) -> let e = match evaluate e with
                           | Some e -> e
@@ -429,5 +517,9 @@ let flatten2 xs = List.foldBack (@) xs [];;
                   match evaluate s with
                   | None   -> None
                   | Some 0 -> None
+<<<<<<< HEAD
                   | Some n -> Some (e / n) 
  
+=======
+                  | Some n -> Some (e / n)
+>>>>>>> c85b2e5e249beada223a99af28c62fc56c7352ed
