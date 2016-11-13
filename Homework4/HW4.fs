@@ -21,6 +21,9 @@
 // First, explain why F# does not allow the following declaration:
 (*
   let mrev = makeMonitoredFun List.rev
+  
+  The value restriction does not allow this declaration--mrev would be inferred to have a generic type because makeMonitoredFun List.rev is not a syntactic value.
+
 *)
 // Now suppose we rewrite the declaration using the technique of eta expansion:
 (*
@@ -29,8 +32,10 @@
 // Does this solve the problem? Explain why or why not.
 
 // Solution
+   
+   Yes. In order to satisfy F#’s value restriction in declarations such as “let f = e”, ‘e’ must be of a restricted form called a “syntactic value”. One such syntactic value is a function declaration of the form (fun x -> [x]) where the value of x can be obtained without calculation. The eta expansion above satisfies that criteria and therefore satisfies F#’s value restriction. Furthermore, mrev will have a polymorphic type “a list -> a list”.
 
-
+	
 
 // 2. Recall the unambiguous grammar for arithmetic expressions discussed in
 // class:
