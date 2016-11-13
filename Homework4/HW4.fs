@@ -77,7 +77,6 @@ val mrev : x:'a list -> 'a list
 // Therefore, usingthe technique of eta expansion does not solve the problem.
 
 
-
 // 2. Recall the unambiguous grammar for arithmetic expressions discussed in
 // class:
 (*
@@ -93,6 +92,16 @@ val mrev : x:'a list -> 'a list
 
 // Solution
 
+(*
+  E -> E+T | E-T | T
+  T -> E^T | T*F | T/F | F
+  F -> i | (E)
+*)
+// (See image of parse tree)
+// By adding E^T to the beginning of the terms, T, we have set the
+// exponentiation operator with higher precedence than the others. Then instead
+// of writing T^E, which would associated to the left, we write, E^T to
+// associate it to the right.
 
 
 // 3. Recall the grammar for the tiny language used in our discussion of
