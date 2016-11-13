@@ -99,14 +99,14 @@ val mrev : x:'a list -> 'a list
 *)
 // (See image of parse tree)
 // By adding E^T to the beginning of the terms, T, we have set the
-// exponentiation operator with higher precedence than the others. Then instead
-// of writing T^E, which would associated to the left, we write, E^T to
-// associate it to the right.
+// exponentiation operator with higher precedence than the others. Then,
+// instead of writing T^E, which would associated to the left, we write,
+// E^T to associate it to the right.
 
 
 // 3. Recall the grammar for the tiny language used in our discussion of
 // recursive-descent parsing. Let us extend the grammar to allow both if-then
-// and if-then-elsestatements:
+// and if-then-else statements:
 (*
   S -> if E then S | if E then S else S | begin S L | print E
   L -> end | ; S L
@@ -116,6 +116,8 @@ val mrev : x:'a list -> 'a list
 
 // Solution
 
+// It is now ambiguous because since there are 2 IFs that could possibly happen
+// it has no precedence of which one should be evaluated first.
 
 
 // 4. Following the approach described in class, write a complete (pseudo-code)
@@ -130,3 +132,44 @@ val mrev : x:'a list -> 'a list
 // have learned in your study of C or Java.]
 
 // Solution
+
+  // lookahead token
+  int tok = nextToken();
+
+  // error function to return error messages
+  void error(String s) {printf(s); error();}
+
+  void advance() {tok = nextToken();}
+
+  // used whenever a specific token t must appear next
+  void eat(int t) {
+    if (tok == t) advance();
+    else error("eat(): Token is not equal to input t");
+  }
+
+  void S() {
+    switch (tok) {
+      case IF: advance(); E(); eat(THEN); S(); eat(ELSE); S(); break;
+      case BEGIN: advance(); S(); L(); break;
+      case PRINT: advance(); E(); break;
+      default: error("S(): Case not found");
+    }
+  }
+
+  void L() {
+    switch (tok) {
+      case END: advance(); break;
+      case SEMICOLON: advance(); S(); L(); break;
+      default: error("L(): Case not found");
+    }
+  }
+
+  void E() {
+    eat(ID);
+  }
+
+  void main() {
+    S();
+    if (tok == EOF) accept();
+    else error("Token is not EOF");
+  }
