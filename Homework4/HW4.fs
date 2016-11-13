@@ -30,6 +30,52 @@
 
 // Solution
 
+// The following declaration:
+(*
+  let mrev = makeMonitoredFun List.rev
+*)
+// returns the following error:
+(*
+Value restriction. The value 'mrev' has been inferred to have generic type
+    val mrev : ('_a list -> '_a list)
+Either make the arguments to 'mrev' explicit or, if you do not intend for it
+to be generic, add a type annotation.
+*)
+// This is because List.rev is not given a specific type and it is not given
+// another parameter to input a list.
+
+// When rewriting the declaration using the technique of eta expansion:
+(*
+  let mrev = fun x -> (makeMonitoredFun List.rev) x
+*)
+// An error is not returned, as shown below:
+(*
+val mrev : x:'a list -> 'a list
+*)
+// However, when using a similar pattern, as used in msqrt, to call the
+// function, the following is returned:
+(*
+  mrev [3;2;1] @ mrev [1..3];;
+  Called 1 times.
+  Called 1 times.
+  val it : int list = [1; 2; 3; 3; 2; 1]
+*)
+// Which is not correct. Clearly, the function is called twice, but by using
+// the technique of eta expansion, the counter gets reset everytime the function
+// is called. This also happens when rewriting the msqrt function using
+// the technique of eta expansion:
+(*
+  > let msqrt = fun x -> (makeMonitoredFun sqrt) x;;
+
+  val msqrt : x:float -> float
+
+  > msqrt 16.0 + msqrt 25.0;;
+  Called 1 times.
+  Called 1 times.
+  val it : float = 9.0
+*)
+// Therefore, usingthe technique of eta expansion does not solve the problem.
+
 
 
 // 2. Recall the unambiguous grammar for arithmetic expressions discussed in
