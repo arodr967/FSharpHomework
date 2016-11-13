@@ -117,23 +117,42 @@
 
 
 (*
+  This modified CFG should remove the dangling else ambiguity by setting a 
+  precedence on which of the two if statements should be evaluated first:
 
+  S -> if E then S else S | if E then F else S | begin S L | print E
+  F -> if E then S 
+  L -> end | ; S L
+  E -> i
 
   **THIS CODE WAS COPIED FROM THE NOTES AND MODIFIED AS NEEDED**
+
   void S() {
     switch (tok) {
       case IF: advance(); E(); eat(THEN); S(); eat(ELSE); S(); break;
+      CASE IFWITHIF : advance; E(); eat THEN; F(); eat(ELSE); S(); break;
       case BEGIN: advance(); S(); L(); break;
       case PRINT: advance(); E(); break;
-      default: error();
+      default: error(serror);
     }
+  }
+
+  void F() {
+
+     switch (tok) {
+      case IFTHEN: advance(); E(); eat THEN; S(); break;
+      default: error(ferror);
+    }
+
+
+
   }
 
   void L() {
     switch (tok) {
       case END: advance(); break;
       case SEMICOLON: advance(); S(); L(); break;
-      default: error();
+      default: error(lerror);
     }
   }
 
@@ -143,7 +162,11 @@
 
   void main() {
     S();
-    if (tok == EOF) accept(); else error();
+    if (tok == EOF) accept(); else error(eoferror);
+  }
+
+  void error(errorType) {
+     eat(errorType);   
   }
 
 *)
