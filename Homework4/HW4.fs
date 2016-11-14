@@ -36,10 +36,10 @@
 *)
 // returns the following error:
 (*
-Value restriction. The value 'mrev' has been inferred to have generic type
-    val mrev : ('_a list -> '_a list)
-Either make the arguments to 'mrev' explicit or, if you do not intend for it
-to be generic, add a type annotation.
+  Value restriction. The value 'mrev' has been inferred to have generic type
+      val mrev : ('_a list -> '_a list)
+  Either make the arguments to 'mrev' explicit or, if you do not intend for it
+  to be generic, add a type annotation.
 *)
 // This is because List.rev is not given a specific type and it is not given
 // another parameter to input a list.
@@ -48,9 +48,9 @@ to be generic, add a type annotation.
 (*
   let mrev = fun x -> (makeMonitoredFun List.rev) x
 *)
-// An error is not returned, as shown below:
+// An error is not returned, which would solve that problem, as shown below:
 (*
-val mrev : x:'a list -> 'a list
+  val mrev : x:'a list -> 'a list
 *)
 // However, when using a similar pattern, as used in msqrt, to call the
 // function, the following is returned:
@@ -74,7 +74,18 @@ val mrev : x:'a list -> 'a list
   Called 1 times.
   val it : float = 9.0
 *)
-// Therefore, usingthe technique of eta expansion does not solve the problem.
+
+// So, in order to satisfy F#’s value restriction in declarations such as
+// “let f = e”, ‘e’ must be of a restricted form called a “syntactic value”.
+// One such syntactic value is a function declaration of the form
+// (fun x -> [x]) where the value of x can be obtained without calculation.
+// The eta expansion above satisfies that criteria and therefore satisfies F#’s
+// value restriction. Furthermore, mrev will have a polymorphic type
+// “a list -> a list”.
+
+// Therefore, using the technique of eta expansion solves the problem of F#
+// allowing the function declaration and the value restriction error. However,
+// the function does not return the correct result.
 
 
 // 2. Recall the unambiguous grammar for arithmetic expressions discussed in
@@ -92,16 +103,17 @@ val mrev : x:'a list -> 'a list
 
 // Solution
 
+// The new grammar gives higher precedance than the other binary operators by
+// having it further down the context free grammar. The associativity to the
+// right comes from having F evaluated first in the exponentiation portion of
+// the grammar.
 (*
-  E -> E+T | E-T | T
-  T -> E^T | T*F | T/F | F
-  F -> i | (E)
+   E -> E+T | E-T | T
+   T -> T*S | T/S | S
+   S -> F^S | F
+   F -> i | (E)
 *)
-// (See image of parse tree)
-// By adding E^T to the beginning of the terms, T, we have set the
-// exponentiation operator with higher precedence than the others. Then,
-// instead of writing T^E, which would associated to the left, we write,
-// E^T to associate it to the right.
+// See image for parse tree.
 
 
 // 3. Recall the grammar for the tiny language used in our discussion of
@@ -116,8 +128,14 @@ val mrev : x:'a list -> 'a list
 
 // Solution
 
-// It is now ambiguous because since there are 2 IFs that could possibly happen
-// it has no precedence of which one should be evaluated first.
+// The problem with this CFG arrives when you are attempting to nest an
+// if-then-else statement within an if-then statement (or vice versa). This
+// would cause the following ambiguity:
+// 1.) if a < 4 then (if b > 3 then print 2) else print 3
+// 2.) if a < 4 then (if b > 3 then print 2 else print 3)
+// Both are correct according to this grammar, but if you are trying to nest an
+// if-then-else statement within an if-then statement the second parse would be
+// correct. If the opposite was the case, the first parse would be correct.
 
 
 // 4. Following the approach described in class, write a complete (pseudo-code)
@@ -133,26 +151,35 @@ val mrev : x:'a list -> 'a list
 
 // Solution
 
+// Modified CFG:
+// S -> if E then S | else S | begin S L | print E
+// L -> end | ; S L
+// E -> i
+
+// **THIS CODE WAS COPIED FROM THE NOTES AND MODIFIED AS NEEDED**
+
+
   // lookahead token
   int tok = nextToken();
 
-  // error function to return error messages
-  void error(String s) {printf(s); error();}
+  // log error function to return error messages
+  void logError(String s) {printf(s); error();}
 
   void advance() {tok = nextToken();}
 
   // used whenever a specific token t must appear next
   void eat(int t) {
     if (tok == t) advance();
-    else error("eat(): Token is not equal to input t");
+    else logError("eat(): Token is not equal to input t");
   }
 
   void S() {
     switch (tok) {
-      case IF: advance(); E(); eat(THEN); S(); eat(ELSE); S(); break;
+      case IF: advance(); E(); eat(THEN); S(); break;
+      case ELSE: advance(); S(); break;
       case BEGIN: advance(); S(); L(); break;
       case PRINT: advance(); E(); break;
-      default: error("S(): Case not found");
+      default: logError("S(): Case not found");
     }
   }
 
@@ -160,7 +187,7 @@ val mrev : x:'a list -> 'a list
     switch (tok) {
       case END: advance(); break;
       case SEMICOLON: advance(); S(); L(); break;
-      default: error("L(): Case not found");
+      default: logError("L(): Case not found");
     }
   }
 
@@ -171,5 +198,5 @@ val mrev : x:'a list -> 'a list
   void main() {
     S();
     if (tok == EOF) accept();
-    else error("Token is not EOF");
+    else logError("Token is not EOF");
   }
