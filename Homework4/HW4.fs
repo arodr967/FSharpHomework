@@ -120,8 +120,7 @@
   This modified CFG should remove the dangling else ambiguity by setting a 
   precedence on which of the two if statements should be evaluated first:
 
-  S -> if E then S else S | if E then F else S | begin S L | print E
-  F -> if E then S 
+  S -> if E then S | else S | begin S L | print E
   L -> end | ; S L
   E -> i
 
