@@ -315,7 +315,7 @@
 // Also, the parser allows PCF programs to contain comments, which begin with
 // the character # and extend to the end of the current line.
 
-// Here is a skeleton file to help you get started: interp.fsx. And here are
+// 3. Here is a skeleton file to help you get started: interp.fsx. And here are
 // some sample PCF programs for you to try with your interpreter: twice.pcf,
 // double.pcf, minus.pcf, fibonacci.pcf, factorial.pcf, divisor.pcf, lists.pcf,
 // and ackermann.pcf.
