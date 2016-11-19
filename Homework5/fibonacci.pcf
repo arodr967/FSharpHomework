@@ -1,0 +1,14 @@
+# Evaluates to NUM 6765.
+
+let plus = rec p ->
+      fun x -> fun y -> if iszero x then y else p (pred x) (succ y)
+in
+  let fibonacci = rec f ->
+	fun n -> if iszero n then
+		  0
+		else if iszero (pred n) then
+		  1
+		else
+		  plus (f (pred n)) (f (pred (pred n)))
+  in
+    fibonacci 20

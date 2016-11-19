@@ -1,0 +1,22 @@
+# A PCF program to find the smallest divisor of a number.
+
+let minus = rec m ->
+      fun x -> fun y -> if iszero y then x else m (pred x) (pred y)
+in
+  let divides = rec div ->      # Does d divide n-1?
+        fun d -> fun n ->
+          if iszero n then
+            false
+          else if iszero (pred n) then
+            true
+          else
+            div d (minus n d)
+  in
+    let divisor = rec ds ->
+          fun n -> fun init ->
+            if divides init (succ n) then
+              init
+            else
+              ds n (succ init)
+    in
+      divisor 36863 2           # 36863 = 191 * 193

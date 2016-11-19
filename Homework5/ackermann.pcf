@@ -1,0 +1,12 @@
+# Ackermann's function, evaluates to NUM 509
+
+let Ack = rec A ->
+  fun x -> fun y ->
+    if iszero x then
+      succ y
+    else if iszero y then
+      A (pred x) 1
+    else
+      A (pred x) (A x (pred y))
+in
+  Ack 3 6

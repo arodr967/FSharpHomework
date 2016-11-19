@@ -1,0 +1,6 @@
+# Evaluates to NUM 65536.
+
+let
+  twice = fun f -> fun x -> f (f x)
+in
+  twice twice twice twice succ 0

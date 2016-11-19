@@ -1,0 +1,6 @@
+# Evaluates to NUM 46.
+
+let minus = rec m ->
+      fun x -> fun y -> if iszero y then x else m (pred x) (pred y)
+in
+  minus 125 79
