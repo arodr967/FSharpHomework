@@ -49,7 +49,7 @@ let rec interp = function
             | true  -> interp eA
             | false -> interp eB
         | (b, _, _) -> ERROR "'IF' needs a boolean expression."
-    | FUN (x, e)      -> ERROR (sprintf "'ID' not implemented.")
+    | FUN (x, e)      -> FUN (x, e)
     | REC (x, e)      -> ERROR (sprintf "'ID' not implemented.")
     | APP (e1, e2) ->
         match (interp e1, interp e2) with
@@ -65,6 +65,7 @@ let rec interp = function
                              | NUM 0 -> BOOL true
                              | NUM n -> BOOL false
         | (ISZERO, v) -> ERROR (sprintf "'ISZERO' needs an INT.")
+        | (FUN (x, e), v1) -> interp (subst e x v1)
 
 // Here are two convenient abbreviations for using your interpreter.
 let interpfile filename = filename |> parsefile |> interp
