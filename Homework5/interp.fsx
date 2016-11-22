@@ -28,9 +28,6 @@ let rec subst e x t =
   | APP (e1, e2)    -> APP(subst e1 x t, subst e2 x t)
   | _ -> ERROR "Substitution failed."
 
-// Here I show you a little bit of the implementation of interp. Note how ERRORs
-// are propagated, how rule (6) is implemented, and how stuck evaluations
-// are reported using F#'s sprintf function to create good error messages.
 let rec interp = function
     | ERROR s  -> ERROR s
     | ID s     -> ERROR (sprintf "'ID' not implemented.")
@@ -49,25 +46,22 @@ let rec interp = function
             | true  -> interp eA
             | false -> interp eB
         | (b, _, _) -> ERROR "'IF' needs a boolean expression."
-    | FUN (x, e)      -> FUN (x, e)
-    | REC (x, e)      -> ERROR (sprintf "'ID' not implemented.")
+    | FUN (x, e)      -> FUN (x, e) // Rule (9)
+    | REC (x, e)      -> REC (x, e)
     | APP (e1, e2) ->
         match (interp e1, interp e2) with
-        | (ERROR s, _)  -> ERROR s              // ERRORs are propagated
-        | (_, ERROR s)  -> ERROR s
-        | (SUCC, NUM n) -> NUM (n+1)            // Rule (6)
-        | (SUCC, v)     -> ERROR (sprintf "'SUCC' needs int argument, not '%A'" v)
-        | (PRED, NUM n) -> match (NUM n) with   // Rule (7)
-                           | NUM 0 -> NUM 0
-                           | NUM n -> NUM (n-1)
-        | (PRED, v) -> ERROR (sprintf "'PRED' needs an INT.")
-        | (ISZERO, NUM n) -> match (NUM n) with // Rule (8)
-                             | NUM 0 -> BOOL true
-                             | NUM n -> BOOL false
-        | (ISZERO, v) -> ERROR (sprintf "'ISZERO' needs an INT.")
-        | (FUN (x, e), v1) -> interp (subst e x v1)
-
-// Here are two convenient abbreviations for using your interpreter.
-let interpfile filename = filename |> parsefile |> interp
-
-let interpstr sourcecode = sourcecode |> parsestr |> interp
+        | (ERROR s, _)     -> ERROR s              // ERRORs are propagated
+        | (_, ERROR s)     -> ERROR s
+        | (SUCC, NUM n)    -> NUM (n+1)            // Rule (6)
+        | (SUCC, v)        -> ERROR (sprintf "'SUCC' needs int argument, not '%A'" v)
+        | (PRED, NUM n)    -> match (NUM n) with   // Rule (7)
+                              | NUM 0 -> NUM 0
+                              | NUM n -> NUM (n-1)
+        | (PRED, v)        -> ERROR (sprintf "'PRED' needs an INT.")
+        | (ISZERO, NUM n)  -> match (NUM n) with // Rule (8)
+                              | NUM 0 -> BOOL true
+                              | NUM n -> BOOL false
+        | (ISZERO, v)      -> ERROR (sprintf "'ISZERO' needs an INT.")
+        | (FUN (x, e), v1) -> interp (subst e x v1) // Rule (10)
+        | (REC (x, f), e)  -> interp (APP (subst f x (REC (x, f)), e)) // Rule (11)
+        | (s1, s2)         -> APP (s1, s2)
