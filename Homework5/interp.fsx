@@ -14,6 +14,20 @@ System.Environment.set_CurrentDirectory __SOURCE_DIRECTORY__;;
 // and to constructors like "Parser.Parse.APP" simply as "APP".
 open Parser.Parse
 
+let rec subst e x t =
+  match e with
+  | ID y            -> if y = x then t else ID y
+  | NUM n           -> NUM N
+  | BOOL b          -> BOOL b
+  | SUCC            -> SUCC
+  | PRED            -> PRED
+  | ISZERO          -> ISZERO
+  | IF  (b, e1, e2) -> IF(subst b x t, subst e1 x t, subst e2 x t)
+  | FUN (y, e1)     -> if y = x then FUN (y, e1) else FUN (y, subst e1 x t)
+  | REC (y, e1)     -> if y = x then REC (y, e1) else REC (y, subst e1 x t)
+  | APP (e1, e2)    -> APP(subst e1 x t, subst e2 x t)
+  | _ -> ERROR "Substitution failed."
+
 // Here I show you a little bit of the implementation of interp. Note how ERRORs
 // are propagated, how rule (6) is implemented, and how stuck evaluations
 // are reported using F#'s sprintf function to create good error messages.
