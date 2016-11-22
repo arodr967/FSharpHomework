@@ -30,7 +30,7 @@ let rec subst e x t =
 
 let rec interp = function
     | ERROR s  -> ERROR s
-    | ID s     -> ERROR (sprintf "'ID' not implemented.")
+    | ID s     -> ID s
     | NUM n    -> NUM n     // Rule (1)
     | BOOL b   -> BOOL b    // Rule (2)
     | SUCC     -> SUCC      // Rule (3)
@@ -45,23 +45,23 @@ let rec interp = function
             match b with
             | true  -> interp eA
             | false -> interp eB
-        | (b, _, _) -> ERROR "'IF' needs a boolean expression."
+        | (b, _, _) -> ERROR "'IF' needs BOOL expression."
     | FUN (x, e)      -> FUN (x, e) // Rule (9)
     | REC (x, e)      -> REC (x, e)
     | APP (e1, e2) ->
         match (interp e1, interp e2) with
-        | (ERROR s, _)     -> ERROR s              // ERRORs are propagated
+        | (ERROR s, _)     -> ERROR s               // ERRORs are propagated
         | (_, ERROR s)     -> ERROR s
-        | (SUCC, NUM n)    -> NUM (n+1)            // Rule (6)
-        | (SUCC, v)        -> ERROR (sprintf "'SUCC' needs int argument, not '%A'" v)
-        | (PRED, NUM n)    -> match (NUM n) with   // Rule (7)
+        | (SUCC, NUM n)    -> NUM (n+1)             // Rule (6)
+        | (SUCC, v)        -> ERROR (sprintf "'SUCC' needs INT argument, not '%A'" v)
+        | (PRED, NUM n)    -> match (NUM n) with    // Rule (7)
                               | NUM 0 -> NUM 0
                               | NUM n -> NUM (n-1)
-        | (PRED, v)        -> ERROR (sprintf "'PRED' needs an INT.")
-        | (ISZERO, NUM n)  -> match (NUM n) with // Rule (8)
+        | (PRED, v)        -> ERROR (sprintf "'PRED' needs INT argument, not '%A'" v)
+        | (ISZERO, NUM n)  -> match (NUM n) with    // Rule (8)
                               | NUM 0 -> BOOL true
                               | NUM n -> BOOL false
-        | (ISZERO, v)      -> ERROR (sprintf "'ISZERO' needs an INT.")
+        | (ISZERO, v)      -> ERROR (sprintf "'ISZERO' needs INT argument, not '%A'" v)
         | (FUN (x, e), v1) -> interp (subst e x v1) // Rule (10)
         | (REC (x, f), e)  -> interp (APP (subst f x (REC (x, f)), e)) // Rule (11)
         | (s1, s2)         -> APP (s1, s2)
