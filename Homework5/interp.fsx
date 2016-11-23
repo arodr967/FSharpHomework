@@ -16,12 +16,8 @@ let rec subst e x t= match e with
                      |IF (e1, e2, e3)   -> IF (subst e1 x t, subst e2 x t, subst e3 x t)
                      |FUN (y, e1)       -> if x = y then FUN (y, e1) else FUN (y, subst e1 x t)
                      |REC (y, e1)       -> if x = y then REC (y, e1) else  REC (y, subst e1 x t)
-                     |e                 -> e
+                     |e                 -> e // Catch all
                   
-
-// Here I show you a little bit of the implementation of interp. Note how ERRORs
-// are propagated, how rule (6) is implemented, and how stuck evaluations
-// are reported using F#'s sprintf function to create good error messages.
 let rec interp = function
     | APP (e1, e2) ->
         match (interp e1, interp e2) with
@@ -37,7 +33,7 @@ let rec interp = function
         | (ISZERO, v)           -> ERROR (sprintf "'ISZERO' needs INT argument, not '%A'" v)
         | (FUN (x, e), v1)      -> interp (subst e x v1) // Rule (10)
         | (REC (x, f), e)       -> interp (APP (subst f x (REC (x, f)), e)) // Rule (11)
-     | IF (b, e1, e2) ->     // Rule (4 & 5)
+    | IF (b, e1, e2) ->     // Rule (4 & 5)
         match (interp b, e1, e2) with
         | (ERROR s, _, _)       -> ERROR s
         | (_, ERROR s, _)       -> ERROR s
