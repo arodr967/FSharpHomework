@@ -37,7 +37,6 @@ let rec interp = function
         | (ISZERO, v)           -> ERROR (sprintf "'ISZERO' needs INT argument, not '%A'" v)
         | (FUN (x, e), v1)      -> interp (subst e x v1) // Rule (10)
         | (REC (x, f), e)       -> interp (APP (subst f x (REC (x, f)), e)) // Rule (11)
-        | (s1, s2)              -> APP (s1, s2)
      | IF (b, e1, e2) ->     // Rule (4 & 5)
         match (interp b, e1, e2) with
         | (ERROR s, _, _)       -> ERROR s
@@ -46,7 +45,7 @@ let rec interp = function
         | (BOOL true, e, _)     -> interp e
         | (BOOL false, _, e)    -> interp e
         | (b, _, _) -> ERROR "'IF' needs BOOL expression."
-    | e -> e //Catch all case
+    | e -> e // Catch all case NUM -> NUM, BOOL -> BOOL, FUN (x,e) -> FUN (x,e)  etc..
 
   
     
