@@ -46,3 +46,9 @@ let rec interp = function
         | (BOOL false, _, e)    -> interp e
         | (b, _, _) -> ERROR "'IF' needs BOOL expression."
     | e -> e // Catch all case NUM -> NUM, BOOL -> BOOL, FUN (x,e) -> FUN (x,e)  etc..
+
+
+// Two convenient abbreviations for using the interpreter
+let interpfile filename = filename |> parsefile |> interp
+
+let interpstr sourcecode = sourcecode |> parsestr |> interp
