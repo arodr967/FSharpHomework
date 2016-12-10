@@ -1,5 +1,7 @@
 # F# Homework
 
+F# homework assignments for Florida International University's Principles of Programming Languages (COP4555) course.
+
 ----
 
 ## Develop 🤓
